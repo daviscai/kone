@@ -1,0 +1,38 @@
+{
+  "name": "kwen",
+  "version": "1.0.0",
+  "description": "a mvc framework with koa2",
+  "main": "index.js",
+  "scripts": {
+    "start-dev": "./node_modules/.bin/rollup -c config/rollup/dev.js",
+    "lint": "eslint . --ext .js"
+  },
+  "keywords": [
+    "node",
+    "mvc",
+    "framework"
+  ],
+  "author": "caiwxiong@qq.com",
+  "license": "MIT",
+  "dependencies": {
+    "babel-polyfill": "^6.20.0",
+    "koa": "^2.0.0-alpha.7"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.18.0",
+    "babel-preset-es2015": "^6.18.0",
+    "babel-preset-stage-3": "^6.17.0",
+    "babel-register": "^6.18.0",
+    "eslint": "^3.12.2",
+    "eslint-config-airbnb": "^13.0.0",
+    "eslint-plugin-import": "^2.2.0",
+    "eslint-plugin-jsx-a11y": "^2.2.3",
+    "eslint-plugin-react": "^6.8.0"
+  },
+  "babel": {
+    "presets": [
+      "es2015",
+      "stage-3"
+    ]
+  }
+}
