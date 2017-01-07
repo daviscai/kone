@@ -4,14 +4,14 @@ import Redis from 'ioredis';
 import { renderToString } from 'react-dom/server';
 import Articles from '../components/article.jsx';
 
-import models from '../models/index';
+//import models from '../models/index';
 
 const index = async (ctx) => {
   const prerenderHtml = await renderToString(
     <Articles  />
   );
 
-  //const author = await models.User.findById('111');
+  // await models.User.findById('111');
 
   /*
   let redis = new Redis(6380);

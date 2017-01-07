@@ -1,5 +1,22 @@
 https://www.smashingmagazine.com/2016/08/getting-started-koa-2-async-functions/
 
+```
+npm install -c
+#  -c, --china: specify in china, will automatically using chinses npm registry and other binary's mirrors
+```
+
+如果没有安装 devDependencies 的模块，是因为环境变量 NODE_ENV=production ，所以不会安装开发依赖包
+
+```
+$ ENV | grep NODE
+NODE_PATH=/Applications/Atom.app/Contents/Resources/app.asar/exports
+NODE_ENV=production
+ELECTRON_RUN_AS_NODE=1
+
+export NODE_ENV=development
+```
+再执行安装即可，部分依赖包可能会因网络慢安装失败，可重复多次执行 `npm install -c`,直到所有依赖包都安装完。
+
 ###  setp 1 : `koa2 + babel` , run simple app for node.js
 
 see package.json :
