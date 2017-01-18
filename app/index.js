@@ -10,6 +10,7 @@ import convert from 'koa-convert';
 import locale from 'koa-locale';
 import i18n from 'koa-i18n';
 import jsonp from 'koa-jsonp';
+import server from 'koa-static2';
 import router from './routers';
 
 const appDir = path.resolve(__dirname, '..');
@@ -31,6 +32,9 @@ const logger = log4js.getLogger('http');
 
 // Create the app from the ES6 class.
 const app = new Koa();
+
+// server static file
+app.use(server("assets", __dirname+'/../assets'));
 
 app.use(jsonp());
 

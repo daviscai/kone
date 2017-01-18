@@ -9,7 +9,6 @@ const basename = path.basename(module.filename);
 const db = {};
 let sequelize = new Sequelize(config.database, config.username, config.password, config);
 
-console.log(process);
 
 fs
   .readdirSync(__dirname)

@@ -1,6 +1,7 @@
-import bcrypt from 'bcrypt';
-
 export default function(sequelize, DataTypes) {
+  // sequelize.define('name', {attributes}, {options})
+  // 字段定义（主键、created_at、updated_at默认包含，不用特殊定义）
+  // 是否需要增加createdAt、updatedAt、deletedAt字段  'timestamps': true,
   const User = sequelize.define('User', {
     id: {
       type: DataTypes.INTEGER,
@@ -21,71 +22,37 @@ export default function(sequelize, DataTypes) {
         isEmail: true
       }
     },
-    passwordDigest: {
-      type: DataTypes.STRING,
-      field: 'password_digest',
-      validate: {
-        notEmpty: true,
-        len: [8, 128]
-      }
-    },
     password: {
       type: DataTypes.VIRTUAL,
       allowNull: false,
       validate: {
         notEmpty: true
       }
-    },
-    passwordConfirmation: {
-      type: DataTypes.VIRTUAL
     }
   },{
-    underscored: true,
+    underscored: true, //字段以下划线（_）来分割（默认是驼峰命名风格）
     tableName: 'users',
-    indexes: [{ unique: true, fields: ['email'] }],
-    classMethods: {
-      associate: function(models) {
-        User.hasMany(models.Article, { foreignKey: 'user_id' });
-      }
-    },
-    instanceMethods: {
-      authenticate: function(value) {
-        if (bcrypt.compareSync(value, this.passwordDigest)){
-          return this;
-        }
-        else{
-          return false;
-        }
-      }
-    }
+    timestamps: false, //是否需要增加createdAt、updatedAt、deletedAt字段
+    indexes: [{ unique: true, fields: ['email'] }]
   });
-  function hasSecurePassword(user, options, callback) {
-    if (user.password != user.passwordConfirmation) {
-      throw new Error('Password confirmation doesn\'t match Password');
-    }
-    bcrypt.hash(user.get('password'), 10, function(err, hash) {
-      if (err) return callback(err);
-      user.set('passwordDigest', hash);
-      return callback(null, options);
-    });
-  }
+
   User.beforeCreate(function(user, options, callback) {
-    user.email = user.email.toLowerCase();
-    if (user.password){
-      hasSecurePassword(user, options, callback);
-    }
-    else{
-      return callback(null, options);
-    }
+    // user.email = user.email.toLowerCase();
+    // if (user.password){
+    //   hasSecurePassword(user, options, callback);
+    // }
+    // else{
+    //   return callback(null, options);
+    // }
   });
   User.beforeUpdate(function(user, options, callback) {
-    user.email = user.email.toLowerCase();
-    if (user.password){
-      hasSecurePassword(user, options, callback);
-    }
-    else{
-      return callback(null, options);
-    }
+    // user.email = user.email.toLowerCase();
+    // if (user.password){
+    //
+    // }
+    // else{
+    //   return callback(null, options);
+    // }
   });
   return User;
 }

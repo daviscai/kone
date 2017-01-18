@@ -1166,22 +1166,140 @@ export default {
 
 ```
 
-### step 9 : `koa2 + babel + eslint + koa-router + react + nunjucks +  logger + koa-csrf + koa-i18n + ava + jsonp + ioredis + sequelize `, support multi sql orm
+### step 9 : `koa2 + babel + eslint + koa-router + react + nunjucks +  logger + koa-csrf + koa-i18n + ava + jsonp + ioredis + sequelize `, support multi sql orm， 支持读写分离
 
 ```
 npm install --save \
 sequelize
+mysql
 
 npm install --save-dev \
 
 ```
 
+安装mysql server 5.7， Mac OS 我是下载dmg安装包来安装的，其他linux系统可以通过下载源码包后编译安装。
+
+设置环境变量
+```
+sudo vi /etc/profile
+export PATH="/usr/local/bin:/usr/bin:/usr/local/mysql/bin:"
+source /etc/profile
+echo $PATH
+```
+
+启动mysql server : `sudo /usr/local/mysql/bin/mysqld --user=_mysql`
+
+
+安装5.7版本后，不再支持空密码登录，如果没有保存默认随机密码，可以通过下面方式重新设置：
+```
+## –skip-grant-tables的方式启动mysqld_safe进程 ，这个模式是可以绕过mysql授权.
+sudo /usr/local/mysql/bin/mysqld_safe --skip-grant-tables
+
+## 空密码登录
+mysql
+
+mysql> update mysql.user set authentication_string=PASSWORD('123123') where user='root';
+Query OK, 1 row affected, 1 warning (0.04 sec)
+Rows matched: 1  Changed: 1  Warnings: 1
+
+mysql> flush privileges;
+Query OK, 0 rows affected (0.02 sec)
+
+## 杀掉mysqld_safe进程，重新启动mysql
+mysql -uroot -p123123
+
+## 第一次登录会要求重新修改密码
+mysql> show databases;
+ERROR 1820 (HY000): You must reset your password using ALTER USER statement before executing this statement.
+
+mysql> set password for root@localhost=password('123123');
+Query OK, 0 rows affected, 1 warning (0.00 sec)
+```
+
+By default, the OS X installation does not use a my.cnf, and MySQL just uses the default values. To set up your own my.cnf, you could just create a file straight in /etc.
+OS X provides example configuration files at /usr/local/mysql/support-files/
+
+so, `sudo cp /usr/local/mysql/support-files/my-default.cnf /etc/my.cnf`
+
+这里提供一个针对5.7版本优化后的配置，[mysql 5.7 my.cnf](http://www.qinglin.net/360.html)
+
+
+主从同步配置，可参考：
+http://blog.yuansc.com/2016/02/17/mysql-5-7互为主从同步配置/
+http://www.jianshu.com/p/a1ff89122266
+
+
 创建model目录，存放数据模型文件
-mkdir app/model
+mkdir app/models
+
+```
+ERROR 1045 (28000): Access denied for user 'root'@'127.0.0.1' (using password: YES)
+
+mysql> GRANT ALL PRIVILEGES ON *.* TO 'root'@'127.0.0.1' IDENTIFIED BY 'cai123456' WITH GRANT OPTION;
+Query OK, 0 rows affected, 1 warning (0.00 sec)
+
+mysql> FLUSH PRIVILEGES;
+Query OK, 0 rows affected (0.00 sec)
+```
+
+```
+CREATE TABLE IF NOT EXISTS `test`.`users` (
+`id` INTEGER NOT NULL auto_increment ,
+`name` VARCHAR(255) NULL ,
+`email` VARCHAR(45) NULL ,
+`password` VARCHAR(45) NULL ,
+`created_at` DATETIME NOT NULL,
+`updated_at` DATETIME NOT NULL,
+PRIMARY KEY (`id`)
+)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8
+COLLATE = utf8_bin
+
+```
+
+https://segmentfault.com/a/1190000003987871
+
+
+### step 10 : `koa2 + babel + eslint + koa-router + react + nunjucks +  logger + koa-csrf + koa-i18n + ava + jsonp + ioredis + sequelize + antd  `, support ant design ui
+
+```
+npm install --save \
+antd
+redux
+react-router
+react-redux
+koa-static2  //静态文件中间件
+
+npm install --save-dev \
+babel-plugin-import
+
+rollup
+rollup-plugin-babel
+babel-preset-es2015-rollup
+rollup-plugin-node-resolve rollup-plugin-commonjs
+rollup-plugin-uglify
+rollup-plugin-replace
+rollup-plugin-node-globals
+rollup-plugin-node-builtins
+rollup-plugin-livereload
+
+```
+https://github.com/git-lt/isomorphism-koa2-react-antd
+http://www.cnblogs.com/luozhihao/p/5579786.html
+先看看服务端渲染react
 
 
 
+install rollup see https://github.com/daviscai/rollup-quick-start
 
+rollup用于打包管理前端资源，不会打包服务端代码。
+
+```
+Uncaught ReferenceError: process is not defined
+
+https://github.com/rollup/rollup/issues/487
+```
 
 
 https://blog.coding.net/blog/React-Server-Side-Rendering-for-SPA-SEO
