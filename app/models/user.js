@@ -36,6 +36,7 @@ export default function(sequelize, DataTypes) {
     indexes: [{ unique: true, fields: ['email'] }]
   });
 
+  /*
   User.beforeCreate(function(user, options, callback) {
     // user.email = user.email.toLowerCase();
     // if (user.password){
@@ -54,5 +55,6 @@ export default function(sequelize, DataTypes) {
     //   return callback(null, options);
     // }
   });
+  */
   return User;
 }

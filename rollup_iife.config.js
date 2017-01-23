@@ -10,9 +10,15 @@ import replace from 'rollup-plugin-replace';
 export default {
   entry: 'assets/js/src/about.js',    //需要打包的文件
   dest: 'assets/js/dist/about.js',  //打包后的文件
-  format: 'cjs',       // iife, cjs, es
+  format: 'iife',       // iife, cjs, es
   useStrict: true,
   sourceMap: false,  //inline，线上环境设置为false
+  external: [ 'react', 'react-dom', 'antd'],
+  globals: {
+    'react': 'React',
+    'react-dom': 'ReactDOM',
+    'antd':'antd'
+  },
   plugins: [
     resolve({
       jsnext: true,
@@ -31,14 +37,6 @@ export default {
     }),
     commonjs({
       include: 'node_modules/**',
-      namedExports : {
-        'node_modules/react/react.js' : ['Component','Children','createElement','PropTypes'],
-        'node_modules/react-dom/index.js' : ['ReactDOM'],
-        'node_modules/antd/lib/index.js' : [
-          'Table',
-          //'Form', 'Calendar', 'Card', 'Input', 'Select', 'Checkbox', 'DatePicker','Col', 'Radio', 'Button', 'Modal', 'message', 'Icon'
-        ]
-      }
     }),
     globals(),
     builtins(),

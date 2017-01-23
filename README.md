@@ -1282,6 +1282,7 @@ rollup-plugin-uglify
 rollup-plugin-replace
 rollup-plugin-node-globals
 rollup-plugin-node-builtins
+rollup-plugin-scss
 rollup-plugin-livereload
 
 ```

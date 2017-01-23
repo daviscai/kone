@@ -1,12 +1,12 @@
 import React from 'react';
 //import ReactDOM from 'react-dom';
 import fs from 'fs';
-import Redis from 'ioredis';
+//import Redis from 'ioredis';
 import { renderToString } from 'react-dom/server';
 import Articles from '../components/article.jsx';
 import { DatePicker } from 'antd';
 
-import models from '../models/index';
+//import models from '../models/index';
 
 const index = async (ctx) => {
   const prerenderHtml = await renderToString(
