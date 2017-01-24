@@ -5,7 +5,6 @@ import resolve from 'rollup-plugin-node-resolve';
 import commonjs from 'rollup-plugin-commonjs';
 import uglify from 'rollup-plugin-uglify';
 import replace from 'rollup-plugin-replace';
-//import livereload from 'rollup-plugin-livereload';
 
 export default {
   entry: 'assets/js/src/about.js',    //需要打包的文件
@@ -43,6 +42,5 @@ export default {
     globals(),
     builtins(),
     (process.env.NODE_ENV === 'production' && uglify()),
-    //livereload(),
   ],
 };

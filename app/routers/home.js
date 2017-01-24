@@ -2,14 +2,19 @@ import Router from 'koa-router';
 import home from '../controllers/home';
 
 const router = Router({
-  prefix: '/home'
+    prefix: '/home'
 });
 
 router.get('/', home.index);
-router.get('/getList', home.getList);
+router.get('/testI18n', home.testI18n);
+router.get('/testCsrf', home.testCsrf);
+router.get('/testLogger', home.testLogger);
+router.get('/testRedis', home.testRedis);
+router.get('/testDB', home.testDB);
+router.post('/testJson', home.testJson);
+router.get('/testTemplate', home.testTemplate);
+router.get('/testAntd', home.testAntd);
 router.get('/reg', home.reg);
-router.post('/reg', home.reg);
-router.get('/about', home.about);
 
 // for require auto in index.js
 module.exports = router;

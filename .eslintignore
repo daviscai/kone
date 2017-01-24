@@ -1,2 +1,4 @@
 assets/js/dist/*
 app/config/locales/*
+rollup_iife.config.js
+rollup.config.js

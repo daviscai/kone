@@ -1302,6 +1302,73 @@ Uncaught ReferenceError: process is not defined
 https://github.com/rollup/rollup/issues/487
 ```
 
+代码修改后，自动即时生效：
+npm install --save-dev nodemon -c
+
+```
+"start-dev":"./node_modules/.bin/nodemon ./index.js"
+
+npm run start-dev
+```
+
+部署和应用监控: pm2
+
+```
+npm install --save-dev pm2 -c
+
+"start": "./node_modules/.bin/pm2 start ./index.js --watch "
+
+npm run start
+```
+
+```
+$ node_modules/.bin/pm2 list
+┌──────────┬────┬──────┬───────┬────────┬─────────┬────────┬─────┬───────────┬──────────┐
+│ App name │ id │ mode │ pid   │ status │ restart │ uptime │ cpu │ mem       │ watching │
+├──────────┼────┼──────┼───────┼────────┼─────────┼────────┼─────┼───────────┼──────────┤
+│ index    │ 0  │ fork │ 24242 │ online │ 0       │ 6m     │ 0%  │ 62.0 MB   │ disabled │
+└──────────┴────┴──────┴───────┴────────┴─────────┴────────┴─────┴───────────┴──────────┘
+```
+
+more infomation see pm2 --help
+```
+    Start an app using all CPUs available + set a name :
+    $ pm2 start app.js -i 0 --name "api"
+
+    Restart the previous app launched, by name :
+    $ pm2 restart api
+
+    Stop the app :
+    $ pm2 stop api
+
+    Restart the app that is stopped :
+    $ pm2 restart api
+
+    Remove the app from the process list :
+    $ pm2 delete api
+
+    Kill daemon pm2 :
+    $ pm2 kill
+```
+
+```
+pm2 在线监控系统 https://keymetrics.io/
+
+1. 注册账号，创建bucket
+2. node_modules/.bin/pm2 link [secret_key|command] [public_key] [machine_name] , 创建bucket成功后会提示密钥
+[Keymetrics.io] Using (Public key: c6zloh7vktlx8cd) (Private key: clkp6tcrf0gz9k0)
+[Keymetrics.io] [Agent created] Agent ACTIVE - Web Access: https://app.keymetrics.io/
+3. 访问 https://app.keymetrics.io/ 即可实时看到应用的运行数据
+
+停止监控：
+$ node_modules/.bin/pm2 link stop
+[Keymetrics.io] Stopping agent...
+[Keymetrics.io] Stopped
+```
+
+pm2 console监控 : pm2 monit
+
+
 
 https://blog.coding.net/blog/React-Server-Side-Rendering-for-SPA-SEO
 https://mozilla.github.io/nunjucks/templating.html

@@ -7,7 +7,9 @@
     "test": "./node_modules/.bin/nyc  ava --reporter=text-lcov",
     "build": "./node_modules/.bin/rollup -c rollup.config.js",
     "build-min": "NODE_ENV=production ./node_modules/.bin/rollup -c rollup.config.js",
-    "lint": "./node_modules/.bin/eslint . --ext .js"
+    "lint": "./node_modules/.bin/eslint . --ext .js",
+    "start-dev": "./node_modules/.bin/nodemon ./index.js",
+    "start": "./node_modules/.bin/pm2 start ./index.js --watch "
   },
   "keywords": [
     "node",
@@ -73,7 +75,9 @@
     "eslint-plugin-import": "^2.2.0",
     "eslint-plugin-jsx-a11y": "^2.2.3",
     "eslint-plugin-react": "^6.8.0",
+    "nodemon": "^1.11.0",
     "nyc": "^10.0.0",
+    "pm2": "^2.3.0",
     "rollup": "^0.41.1",
     "rollup-plugin-babel": "^2.7.1",
     "rollup-plugin-commonjs": "^7.0.0",

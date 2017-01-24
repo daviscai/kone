@@ -9,5 +9,5 @@ const app = require( appDir + '/app/index').default;
 const request = supertest(app.listen());
 
 test('home index', async () => {
-  await request.get('/home').expect(200);
+    await request.get('/home').expect(200);
 });

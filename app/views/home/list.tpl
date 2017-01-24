@@ -11,10 +11,6 @@
 
 <div id="app"></div>
 
-<!--
-<script src="/assets/js/dist/react.min.js"></script>
-<script src="/assets/js/dist/react-dom.min.js"></script>
-<script src="/assets/js/dist/antd.min.js"></script>
--->
+
 <script src="/assets/js/dist/about.js"></script>
 {% endblock %}
