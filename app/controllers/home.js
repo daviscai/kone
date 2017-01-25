@@ -1,27 +1,35 @@
 import Redis from 'ioredis';
 import models from '../models/index';
 
-const index = async (ctx) => {
+const index = (ctx) => {
     ctx.status = 200;
 };
 
-const testI18n = async (ctx)=>{
+const testI18n = (ctx)=>{
     let title = ctx.i18n.__('app.title');
-    ctx.body = 'test2';
-    console.log(title);
+    ctx.body = title;
     ctx.status = 200;
 };
 
-const testCsrf = async (ctx)=>{
+const testCsrf = (ctx)=>{
     let csrf = ctx.csrf;
     console.log(csrf);
 };
 
-const testLogger = async (ctx)=>{
+const testLogger = (ctx)=>{
+    /*
+    ctx.logger.trace('this is trace');
     ctx.logger.debug('this is debug');
+    ctx.logger.info('this is info');
+    ctx.logger.warn('this is warn');
+    ctx.logger.error('this is error');
+    ctx.logger.fatal('this is fatal');
+    */
+    ctx.logger.debug('this is debug');
+    ctx.status = 200;
 };
 
-const testRedis = async ()=>{
+const testRedis = ()=>{
     let redis = new Redis(6380);
     redis.set('foo','hello2');
     redis.get('foo').then((rs)=>{
@@ -48,11 +56,11 @@ const testRedis = async ()=>{
 };
 
 const testDB = async ()=>{
-    let rs = models.User.findById('111');
+    let rs = await models.User.findById('111');
     console.log(rs);
 };
 
-const testJson = async (ctx)=>{
+const testJson = (ctx)=>{
     ctx.body = ctx;
 };
 

@@ -1,10 +1,11 @@
 {
   "name": "kwan",
   "version": "1.0.0",
-  "description": "a mvc framework with koa2",
+  "description": "kwan is a framework base on Koa2 for node.js",
   "main": "index.js",
   "scripts": {
     "test": "./node_modules/.bin/nyc  ava --reporter=text-lcov",
+    "ava": "./node_modules/.bin/ava -v -w test/",
     "build": "./node_modules/.bin/rollup -c rollup.config.js",
     "build-min": "NODE_ENV=production ./node_modules/.bin/rollup -c rollup.config.js",
     "lint": "./node_modules/.bin/eslint . --ext .js",
@@ -12,9 +13,8 @@
     "start": "./node_modules/.bin/pm2 start ./index.js --watch "
   },
   "keywords": [
-    "node",
-    "mvc",
-    "framework"
+    "koa2",
+    "node.js framework"
   ],
   "author": "caiwxiong@qq.com",
   "license": "MIT",

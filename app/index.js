@@ -48,9 +48,9 @@ app.use(convert(i18n(app, {
     directory: configDir + '/locales',
     locales: ['zh-cn', 'en'], //  `zh-cn` defualtLocale, must match the locales to the filenames
     modes: [ //  If one mode is detected, no continue to detect.
-        'query', //  optional detect querystring - `/?locale=en-US`
+        'query', //  optional detect querystring - `/?locale=en`
         'subdomain', //  optional detect subdomain   - `zh-CN.koajs.com`
-        'cookie', //  optional detect cookie      - `Cookie: locale=zh-TW`
+        'cookie', //  optional detect cookie      - `Cookie: locale=zh-cn`
         'header', //  optional detect header      - `Accept-Language: zh-CN,zh;q=0.5`
         'url', //  optional detect url         - `/en`
         'tld' //  optional detect tld(the last domain) - `koajs.cn`
@@ -64,9 +64,14 @@ app.use(session());
 app.use(bodyParser());
 
 // use log4js logger
-app.use(log4js.koaLogger(logger, {
-    level: 'auto'
-}));
+app.use(
+    log4js.koaLogger(logger, {level: 'auto'})
+);
+// put logger into ctx
+app.use( async (ctx, next)=>{
+    ctx.logger = logger;
+    await next();
+});
 
 // use nunjucks template
 app.use(views(__dirname + '/views', {
@@ -87,14 +92,5 @@ app.use(new csrf({
 
 // use koa-router router
 app.use(router.routes(), router.allowedMethods());
-
-/*
-logger.trace('this is trace');
-logger.debug('this is debug');
-logger.info('this is info');
-logger.warn('this is warn');
-logger.error('this is error');
-logger.fatal('this is fatal');
-*/
 
 export default app;
