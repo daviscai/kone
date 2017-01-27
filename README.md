@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/daviscai/kwan.svg?branch=master)](https://travis-ci.org/daviscai/kwan)
+[![codecov](https://codecov.io/gh/daviscai/kwan/branch/master/graph/badge.svg)](https://codecov.io/gh/daviscai/kwan)
 
 ## kwan 是什么？
 kwan (又名k丸) 是基于Koa2搭建的node.js开发框架，Koa2仅提供最基本的核心功能，允许向执行流中插入中间件来实现业务功能，同时，koa官方收集了非常多的中间件，可满足绝大部分业务需求，这也给使用者带来了另一个问题，我该用哪些中间件来满足我的业务？高度的灵活性也意味着每个开发者都需要自行搭建一整套的开发环境，否则难于在实际生产环境和多人协作团队中使用。
@@ -86,12 +87,6 @@ kwan\
     |log4js.json   //日志配置文件
     |.eslintrc     //eslint 代码规范检测配置文件
 ```
-
-## About Me
-80后，8年码农经验，[个人博客](http://wenzzz.com)，现在迅雷负责游戏部门的PHP和前端团队，kwan(k丸)，node开发框架也是在团队技术转型大背景下的产物，希望给团队带来更多好玩的技术。  
-kwan(k丸)框架将会被用于多个内部项目，不断完善。
-
-
 
 ## License
 MIT

@@ -10,3 +10,12 @@ node_js:
 #env: NODE_ENV=development
 script:
   - npm run test
+after_script:
+  - npm install codecov
+  - ./node_modules/.bin/nyc ./node_modules/.bin/ava --reporter=text-lcov
+  - ./node_modules/.bin/nyc report --reporter=text-lcov > coverage.lcov
+  - ./node_modules/.bin/codecov -t decd7356-986f-4be4-a409-57ebf6c46796
+#指定分支，只有指定的分支提交时才会运行脚本
+branches:
+  only:
+    - master
