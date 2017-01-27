@@ -1,0 +1,16 @@
+language: node_js
+notifications:      # 每次构建的时候是否通知，如果不想收到通知邮箱，那就设置false吧
+  email: false
+node_js:
+  - stable
+  - 7
+  - 6
+  - 5
+  - 4
+  - 3
+  - 2
+  - 1
+  - 0.12
+env: NODE_ENV=development
+script:
+  - npm run test
