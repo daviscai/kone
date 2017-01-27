@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/daviscai/kwan.svg?branch=master)](https://travis-ci.org/daviscai/kwan)
+
 ## kwan 是什么？
 kwan (又名k丸) 是基于Koa2搭建的node.js开发框架，Koa2仅提供最基本的核心功能，允许向执行流中插入中间件来实现业务功能，同时，koa官方收集了非常多的中间件，可满足绝大部分业务需求，这也给使用者带来了另一个问题，我该用哪些中间件来满足我的业务？高度的灵活性也意味着每个开发者都需要自行搭建一整套的开发环境，否则难于在实际生产环境和多人协作团队中使用。
 
