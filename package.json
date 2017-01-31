@@ -1,16 +1,18 @@
 {
   "name": "kwan",
-  "version": "1.0.0",
+  "version": "0.0.2.1",
   "description": "kwan is a framework base on Koa2 for node.js",
   "main": "index.js",
   "scripts": {
     "test": "./node_modules/.bin/nyc  ava --reporter=text-lcov",
     "ava": "./node_modules/.bin/ava -v -w test/",
+    "lint": "./node_modules/.bin/eslint . --ext .js",
     "build": "./node_modules/.bin/rollup -c rollup.config.js",
     "build-min": "NODE_ENV=production ./node_modules/.bin/rollup -c rollup.config.js",
-    "lint": "./node_modules/.bin/eslint . --ext .js",
     "start-dev": "./node_modules/.bin/nodemon ./index.js",
-    "start": "./node_modules/.bin/pm2 start ./index.js --watch "
+    "start": "./node_modules/.bin/pm2 start ./index.js --watch ",
+    "compile": "./node_modules/.bin/babel --copy-files --ignore config/locales/ src/ --out-dir app/ ; cp -R src/config/locales app/config/locales",
+    "watch": "./node_modules/.bin/babel --copy-files --ignore config/locales/ src/ --out-dir app/ --watch"
   },
   "keywords": [
     "koa2",
@@ -18,6 +20,10 @@
   ],
   "author": "caiwxiong@qq.com",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/daviscai/kwan.git"
+  },
   "ava": {
     "babel": {
       "presets": [
@@ -67,6 +73,7 @@
     "babel-cli": "^6.18.0",
     "babel-eslint": "^7.1.1",
     "babel-plugin-import": "^1.1.0",
+    "babel-plugin-transform-runtime": "^6.22.0",
     "babel-preset-es2015": "^6.18.0",
     "babel-preset-es2015-rollup": "^3.0.0",
     "babel-preset-stage-2": "^6.18.0",
@@ -97,21 +104,14 @@
         "es2015"
       ],
       [
-        "stage-3"
+        "stage-2"
       ],
       [
         "react"
       ]
     ],
     "plugins": [
-      [
-        "import",
-        {
-          "libraryName": "antd",
-          "libraryDirectory": "lib",
-          "style": "true"
-        }
-      ]
+        "transform-runtime"
     ]
   }
 }

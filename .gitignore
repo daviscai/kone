@@ -49,3 +49,4 @@ logs
 .nyc_output
 coverage
 *.log
+app 

@@ -40,6 +40,7 @@ git clone https://github.com/daviscai/kwan.git
 export NODE_ENV=development
 npm install -c
 
+npm run compile
 npm run test
 npm run start-dev
 
