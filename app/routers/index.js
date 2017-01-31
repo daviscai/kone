@@ -6,15 +6,17 @@ import home from '../controllers/home';
 const basename = path.basename(module.filename);
 const router = Router();
 
-fs
-    .readdirSync(__dirname)
-    .filter(function(file) {
-        return (file.indexOf('.') !== 0) && (file !== basename) && (file.slice(-3) === '.js');
-    })
-    .forEach(function(file) {
-        let route = require(path.join(__dirname, file));
-        router.use(route.routes(), route.allowedMethods());
+fs.readdir(__dirname, (err, files)=>{
+    if(err){
+        return false;
+    }
+    files.forEach((file)=>{
+        if( (file.indexOf('.') !== 0) && (file !== basename) && (file.slice(-3) === '.js') ){
+            let route = require(path.join(__dirname, file));
+            router.use(route.routes(), route.allowedMethods());
+        }
     });
+});
 
 // default controller.action for http://your-domain/
 router.get('/', home.index);

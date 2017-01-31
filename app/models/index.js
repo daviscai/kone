@@ -10,6 +10,30 @@ const db = {};
 let sequelize = new Sequelize(config.database, config.username, config.password, config);
 
 
+
+fs.readdir(__dirname, (err, files)=>{
+    if(err){
+        return false;
+    }
+    let db = {};
+    files.forEach((file)=>{
+        if( (file.indexOf('.') !== 0) && (file !== basename) && (file.slice(-3) === '.js') ){
+            let model = sequelize['import'](path.join(__dirname, file));
+            db[model.name] = model;
+        }
+    });
+
+    Object.keys(db).forEach(function(modelName) {
+        if (db[modelName].associate) {
+            db[modelName].associate(db);
+        }
+    });
+
+    db.sequelize = sequelize;
+    db.Sequelize = Sequelize;
+});
+
+/*
 fs
     .readdirSync(__dirname)
     .filter(function(file) {
@@ -28,5 +52,7 @@ Object.keys(db).forEach(function(modelName) {
 
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
+*/
+
 
 export default db;
