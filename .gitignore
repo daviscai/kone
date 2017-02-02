@@ -48,5 +48,7 @@ node_modules
 logs
 .nyc_output
 coverage
+coverage.lcov
 *.log
-app 
+app
+assets/js/dist/*

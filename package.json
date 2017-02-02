@@ -1,6 +1,6 @@
 {
   "name": "kwan",
-  "version": "0.0.2.1",
+  "version": "0.0.2",
   "description": "kwan is a framework base on Koa2 for node.js",
   "main": "index.js",
   "scripts": {
