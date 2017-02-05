@@ -1,7 +1,6 @@
 import Koa from 'koa';
-import path from 'path';
-import fs from 'fs';
-import jsonp from './middleware/kwan-jsonp';
+//import path from 'path';
+//import fs from 'fs';
 /*
 import views from 'koa-views';
 import log4js from 'koa-log4';
@@ -18,8 +17,6 @@ import router from './routers';
 
 // Create the app from the ES6 class.
 const app = new Koa();
-
-// app.use(jsonp());  // todo  3ms
 
 /*
 const appDir = path.resolve(__dirname, '..');
@@ -96,7 +93,6 @@ app.use(new csrf({
 // app.use(router.routes(), router.allowedMethods());
 
 app.use((ctx)=>{
-    ctx.body = 'hello';
     ctx.status = 200;
 });
 
