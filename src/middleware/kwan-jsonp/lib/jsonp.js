@@ -23,38 +23,36 @@ module.exports = function jsonp(options) {
         //const startDate = new Date();
         await next();
 
-        return;
-
         let startChunk, endChunk ;
-        let callback = ctx.request.query[callbackName] ;
+        let callback = ctx.query[callbackName] ;
 
         if (!callback) return ;
-        if (ctx.response.body == null) return ;
+        if (ctx.body == null) return ;
 
-        if (ctx.request.method === 'POST') {
-            ctx.response.type = 'html' ;
+        if (ctx.req.method === 'POST') {
+            ctx.res.setHeader('content-type', 'text/html');
             startChunk = iframeHtmlTemplate[0] + callback + iframeHtmlTemplate[1] ;
             endChunk = iframeHtmlTemplate[2] ;
         } else {
-            ctx.response.type = 'text/javascript' ;
-            startChunk = ';' + callback + '(' ;
+            ctx.res.setHeader('content-type', 'text/javascript');
+            startChunk = callback + '(' ;
             endChunk = ');' ;
         }
 
         // 禁用浏览器的类型猜测 , see https://imququ.com/post/web-security-and-response-header.html
-        ctx.set('X-Content-Type-Options', 'nosniff');
+        ctx.res.setHeader('X-Content-Type-Options', 'nosniff');
 
         // handle streams
-        if ( typeof ctx.response.body.pipe === 'function') {
-            ctx.response.body = ctx.response.body.pipe(new JSONPStream({
+        if ( typeof ctx.body.pipe === 'function') {
+            ctx.body = ctx.body.pipe(new JSONPStream({
                 startChunk: startChunk,
                 endChunk: endChunk
             })) ;
         } else {
-            ctx.response.body = startChunk + JSON.stringify(ctx.response.body, null, ctx.app.jsonSpaces) + endChunk ;
+            ctx.body = startChunk + JSON.stringify(ctx.body, null, '') + endChunk ;
 
             // JSON parse vs eval fix. https://github.com/rack/rack-contrib/pull/37
-            ctx.response.body = ctx.response.body
+            ctx.body = ctx.body
                 .replace(/\u2028/g, '\\u2028')
                 .replace(/\u2029/g, '\\u2029') ;
         }

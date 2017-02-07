@@ -4,7 +4,8 @@
   "description": "",
   "main": "run.js",
   "scripts": {
-    "bench": "make battle"
+    "bench": "make battle",
+    "bench-kwan": "make kwan"
   },
   "author": "",
   "license": "ISC",

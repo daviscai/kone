@@ -1,8 +1,21 @@
+const Kwan = require('./core/');
+const jsonp= require('./middleware/kwan-jsonp');
+
+const app = new Kwan();
+
+app.use(jsonp());
+
+
+app.use((ctx)=>{
+    ctx.body = 'hello';
+    ctx.status = 200;
+});
+
+/*
 import Koa from 'koa';
 import path from 'path';
 import fs from 'fs';
 import jsonp from './middleware/kwan-jsonp';
-/*
 import views from 'koa-views';
 import log4js from 'koa-log4';
 import bodyParser from 'koa-bodyparser';
@@ -14,14 +27,12 @@ import i18n from 'koa-i18n';
 import jsonp from 'koa-jsonp';
 import server from 'koa-static2';
 import router from './routers';
-*/
 
 // Create the app from the ES6 class.
 const app = new Koa();
 
 // app.use(jsonp());  // todo  3ms
 
-/*
 const appDir = path.resolve(__dirname, '..');
 const configDir = path.resolve(__dirname, './config');
 const logDir = path.join(appDir, 'logs');
@@ -90,7 +101,6 @@ app.use(new csrf({
     invalidTokenStatusCode: 403,
 }));
 
-*/
 
 // use koa-router router
 // app.use(router.routes(), router.allowedMethods());
@@ -99,5 +109,6 @@ app.use((ctx)=>{
     ctx.body = 'hello';
     ctx.status = 200;
 });
+*/
 
 export default app;

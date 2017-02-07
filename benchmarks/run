@@ -14,6 +14,8 @@ elif [ "$2" == "trek" ]; then
   port="4"
 elif [ "$2" == "kwan" ]; then
   port="5"
+elif [ "$2" == "node" ]; then
+  port="6"
 fi
 
 uri='http://127.0.0.1:700'${port}'?foo[bar]=baz'
