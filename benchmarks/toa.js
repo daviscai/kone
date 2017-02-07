@@ -2,7 +2,7 @@
 
 // https://github.com/koajs/koa/pull/751
 //if (process.env.OVERRIDE_PROMISE) {
-//  global.Promise = require('bluebird')
+global.Promise = require('bluebird')
 //}
 
 const toa = require('toa')
@@ -23,4 +23,3 @@ app.use(function () {
 })
 
 app.listen(7003)
-

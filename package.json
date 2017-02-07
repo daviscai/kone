@@ -16,6 +16,7 @@
   },
   "keywords": [
     "koa2",
+    "kwan",
     "node.js framework"
   ],
   "author": "caiwxiong@qq.com",
@@ -94,8 +95,7 @@
     "rollup-plugin-node-resolve": "^2.0.0",
     "rollup-plugin-replace": "^1.1.1",
     "rollup-plugin-uglify": "^1.0.1",
-    "supertest": "^2.0.1",
-    "supertest-as-promised": "^4.0.2"
+    "supertest": "^2.0.1"
   },
   "babel": {
     "presets": [

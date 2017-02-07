@@ -1,6 +1,6 @@
 import path from 'path';
 import test from 'ava';
-import supertest from 'supertest-as-promised';
+import supertest from 'supertest';
 
 const appDir = path.resolve(__dirname, '../../');
 

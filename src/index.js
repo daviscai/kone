@@ -11,6 +11,19 @@ app.use((ctx)=>{
     ctx.status = 200;
 });
 
+
+// import Koa from 'koa';
+// import jsonp from 'koa-jsonp';
+//
+// const app = new Koa();
+//
+// app.use(jsonp());
+//
+// app.use((ctx)=>{
+//     ctx.body = 'hello';
+//     ctx.status = 200;
+// });
+
 /*
 import Koa from 'koa';
 import path from 'path';
