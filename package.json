@@ -46,6 +46,7 @@
     "babel-polyfill": "^6.20.0",
     "babel-preset-react": "^6.16.0",
     "babel-register": "^6.18.0",
+    "bluebird": "^3.4.7",
     "ioredis": "^2.0.0-rc4",
     "koa": "^2.0.0-alpha.7",
     "koa-bodyparser": "^3.2.0",
