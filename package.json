@@ -11,7 +11,7 @@
     "build-min": "NODE_ENV=production ./node_modules/.bin/rollup -c rollup.config.js",
     "start-dev": "./node_modules/.bin/nodemon ./index.js",
     "start": "./node_modules/.bin/pm2 start ./index.js --watch ",
-    "compile": "./node_modules/.bin/babel --copy-files --ignore config/locales/ src/ --out-dir app/ ; cp -R src/config/locales app/config/locales",
+    "compile": "./node_modules/.bin/babel --copy-files --ignore config/locales/ src/ --out-dir app/",
     "watch": "./node_modules/.bin/babel --copy-files --ignore config/locales/ src/ --out-dir app/ --watch"
   },
   "keywords": [
@@ -46,6 +46,7 @@
     "babel-polyfill": "^6.20.0",
     "babel-preset-react": "^6.16.0",
     "babel-register": "^6.18.0",
+    "bluebird": "^3.4.7",
     "ioredis": "^2.0.0-rc4",
     "koa": "^2.0.0-alpha.7",
     "koa-bodyparser": "^3.2.0",
