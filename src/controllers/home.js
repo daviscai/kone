@@ -1,10 +1,10 @@
 import Redis from 'ioredis';
 import models from '../models/index';
 
-const index = async (ctx) => {
+const index = (ctx) => {
     //ctx.logger.debug('this is debug');
     //let title = ctx.i18n.__('app.title');
-    ctx.body = 'hello';
+    ctx.body = 'hello index';
     ctx.status = 200;
     //await ctx.render("home/reg.tpl", {title:"reg"});
 };

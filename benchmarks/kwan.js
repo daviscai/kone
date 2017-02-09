@@ -8,6 +8,8 @@ global.Promise = require('bluebird')
 const Kwan = require('../app/core/');
 const app = new Kwan();
 
+//const app = require('../app/index').default;
+
 // number of middleware
 
 let n = parseInt(process.env.MW || '1', 10)

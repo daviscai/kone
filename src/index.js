@@ -1,10 +1,16 @@
-const Kwan = require('./core/');
-const jsonp= require('./middleware/kwan-jsonp');
+//const path  = require('path');
+const Kwan  = require('./core/');
+const jsonp = require('./middleware/jsonp');
+const router = require('./middleware/router');
+
+//const appDir = path.resolve(__dirname, '..');
+//const configDir = path.resolve(__dirname, './config');
 
 const app = new Kwan();
 
 app.use(jsonp());
 
+app.use(router());
 
 app.use((ctx)=>{
     ctx.body = 'hello';

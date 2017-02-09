@@ -1,5 +1,6 @@
 /*!
  * jsonp.js
+ * base on koa-jsonp @https://github.com/kilianc/koa-jsonp
  * Created by Davis Cai on 2017/02/04
  * Copyright (c) 2017 Davis Cai, caiwxiong@qq.com
  */
@@ -20,7 +21,6 @@ module.exports = function jsonp(options) {
     ];
 
     return async function _jsonp(ctx, next) {
-        //const startDate = new Date();
         await next();
 
         let startChunk, endChunk ;
@@ -56,8 +56,5 @@ module.exports = function jsonp(options) {
                 .replace(/\u2028/g, '\\u2028')
                 .replace(/\u2029/g, '\\u2029') ;
         }
-
-        //console.log(`method: ${ctx.method} code: ${ctx.status} time:${new Date() -startDate}ms`);
-
     }
 }
