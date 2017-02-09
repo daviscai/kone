@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+
+echo
+MW=$1 node ./bench_helloworld/$2 &
+pid=$!
+
+if [ "$2" == "express" ]; then
+  port="1"
+elif [ "$2" == "koa" ]; then
+  port="2"
+elif [ "$2" == "toa" ]; then
+  port="3"
+elif [ "$2" == "trek" ]; then
+  port="4"
+elif [ "$2" == "kwan" ]; then
+  port="5"
+elif [ "$2" == "node" ]; then
+  port="6"
+fi
+
+##uri='http://127.0.0.1:700'${port}'?foo[bar]=baz'
+uri='http://127.0.0.1:700'${port}
+
+sleep 2
+echo "------- $2 -------"
+curl -g $uri
+echo ""
+
+  ./node_modules/.bin/autocannon $uri \
+    -d 5 \
+    -c 100 \
+    --progress=0
+
+kill $pid

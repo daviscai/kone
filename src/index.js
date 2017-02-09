@@ -12,12 +12,6 @@ app.use(jsonp());
 
 app.use(router());
 
-app.use((ctx)=>{
-    ctx.body = 'hello';
-    ctx.status = 200;
-});
-
-
 // import Koa from 'koa';
 // import jsonp from 'koa-jsonp';
 //

@@ -1,7 +1,7 @@
 import Redis from 'ioredis';
 import models from '../models/index';
 
-const index = (ctx) => {
+const index = async (ctx) => {
     //ctx.logger.debug('this is debug');
     //let title = ctx.i18n.__('app.title');
     ctx.body = 'hello index';

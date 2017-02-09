@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 echo
-MW=$1 node $2 &
+MW=$1 node ./bench_middleware/$2 &
 pid=$!
 
 if [ "$2" == "express" ]; then
@@ -19,7 +19,7 @@ elif [ "$2" == "node" ]; then
 fi
 
 ##uri='http://127.0.0.1:700'${port}'?foo[bar]=baz'
-uri='http://127.0.0.1:700'${port}
+uri='http://127.0.0.1:700'${port}'/?callback=xxx'
 
 sleep 2
 echo "------- $2 -------"
