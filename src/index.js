@@ -1,14 +1,21 @@
-//const path  = require('path');
-const Kwan  = require('./core/');
+const path  = require('path');
+const Kwan = require('./core/');
 const jsonp = require('./middleware/jsonp');
 const router = require('./middleware/router');
+const logger = require('./middleware/logger');
 
-//const appDir = path.resolve(__dirname, '..');
+const appDir = path.resolve(__dirname, '..');
 //const configDir = path.resolve(__dirname, './config');
 
 const app = new Kwan();
 
 app.use(jsonp());
+
+const logDir = path.join(appDir, 'logs');
+app.use(logger({
+    logDir: logDir,
+    logFileName: 'error.log'
+}));
 
 app.use(router());
 

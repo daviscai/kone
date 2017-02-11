@@ -2,6 +2,7 @@ import Redis from 'ioredis';
 import models from '../models/index';
 
 const index = async (ctx) => {
+    ctx.log.info('pino logging');
     //ctx.logger.debug('this is debug');
     //let title = ctx.i18n.__('app.title');
     ctx.body = 'hello index';
