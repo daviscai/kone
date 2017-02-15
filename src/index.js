@@ -3,6 +3,8 @@ const Kwan = require('./core/');
 const jsonp = require('./middleware/jsonp');
 const router = require('./middleware/router');
 const logger = require('./middleware/logger');
+const staticServer = require('./middleware/static');
+const bodyParser = require('trek-body-parser');
 
 const appDir = path.resolve(__dirname, '..');
 //const configDir = path.resolve(__dirname, './config');
@@ -16,6 +18,23 @@ app.use(logger({
     logDir: logDir,
     logFileName: 'error.log'
 }));
+
+// server static file
+app.use(staticServer('assets',__dirname + '/../assets/'));
+
+// bodyparse
+app.use(bodyParser());
+
+// session
+
+
+// i18n
+
+
+// views template
+
+
+//csrf & xss
 
 app.use(router());
 

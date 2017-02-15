@@ -30,17 +30,17 @@ module.exports = function jsonp(options) {
         if (ctx.body == null) return ;
 
         if (ctx.req.method === 'POST') {
-            ctx.res.setHeader('content-type', 'text/html');
+            ctx.res.set('content-type', 'text/html');
             startChunk = iframeHtmlTemplate[0] + callback + iframeHtmlTemplate[1] ;
             endChunk = iframeHtmlTemplate[2] ;
         } else {
-            ctx.res.setHeader('content-type', 'text/javascript');
+            ctx.res.set('content-type', 'text/javascript');
             startChunk = callback + '(' ;
             endChunk = ');' ;
         }
 
         // 禁用浏览器的类型猜测 , see https://imququ.com/post/web-security-and-response-header.html
-        ctx.res.setHeader('X-Content-Type-Options', 'nosniff');
+        ctx.res.set('X-Content-Type-Options', 'nosniff');
 
         // handle streams
         if ( typeof ctx.body.pipe === 'function') {

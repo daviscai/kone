@@ -10,6 +10,7 @@ const Kwan  = require('../../app/core/');
 const jsonp = require('../../app/middleware/jsonp');
 const router = require('../../app/middleware/router');
 const logger = require('../../app/middleware/logger');
+const staticServer = require('../../app/middleware/static');
 const appDir = path.resolve(__dirname, '../../');
 
 const app = new Kwan();
@@ -22,6 +23,10 @@ app.use(logger({
     logDir: logDir,
     logFileName: 'error1.log'
 }));
+
+// server static file
+app.use(staticServer('assets',__dirname + '../../assets/'));
+
 
 app.use(router());
 

@@ -2,10 +2,10 @@
 
 // https://github.com/koajs/koa/pull/751
 //if (process.env.OVERRIDE_PROMISE) {
-global.Promise = require('bluebird')
+//global.Promise = require('bluebird')
 //}
 
-const Kwan = require('../app/core/');
+const Kwan  = require('../../app/core/');
 const app = new Kwan();
 
 //const app = require('../app/index').default;
