@@ -5,9 +5,11 @@ const router = require('./middleware/router');
 const logger = require('./middleware/logger');
 const staticServer = require('./middleware/static');
 const bodyParser = require('trek-body-parser');
+const session = require('./middleware/session');
+const i18n = require('./middleware/i18n');
 
 const appDir = path.resolve(__dirname, '..');
-//const configDir = path.resolve(__dirname, './config');
+const configDir = path.resolve(__dirname, './config');
 
 const app = new Kwan();
 
@@ -26,9 +28,26 @@ app.use(staticServer('assets',__dirname + '/../assets/'));
 app.use(bodyParser());
 
 // session
+app.use(session());
 
 
 // i18n
+app.use(i18n(app, {
+    //defaultLocale: 'zh-cn',
+    cookie: 'lang',
+    locales:['zh-cn', 'en'],
+    directory: configDir + '/locales'
+}));
+
+app.use((ctx)=>{
+
+    ctx.session.user = "tom";
+    let sess = ctx.session;
+    console.log(sess);
+
+    //ctx.i18n.setLocale('zh-cn');
+    ctx.body = ctx.i18n.__('app.title');
+})
 
 
 // views template
