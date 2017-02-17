@@ -1,3 +1,4 @@
+const fs  = require('fs');
 const path  = require('path');
 const Kwan = require('./core/');
 const jsonp = require('./middleware/jsonp');
@@ -7,6 +8,7 @@ const staticServer = require('./middleware/static');
 const bodyParser = require('trek-body-parser');
 const session = require('./middleware/session');
 const i18n = require('./middleware/i18n');
+const views = require('./middleware/template');
 
 const appDir = path.resolve(__dirname, '..');
 const configDir = path.resolve(__dirname, './config');
@@ -39,21 +41,30 @@ app.use(i18n(app, {
     directory: configDir + '/locales'
 }));
 
-app.use((ctx)=>{
+
+// views template
+app.use(views(__dirname + '/views', {
+    extension: 'tpl',
+    map: {
+        tpl: 'nunjucks'
+    }
+}));
+
+//csrf & xss
+
+
+// 模板必须使用 async/await 异步方式
+app.use( async (ctx)=>{
 
     ctx.session.user = "tom";
     let sess = ctx.session;
     console.log(sess);
 
     //ctx.i18n.setLocale('zh-cn');
-    ctx.body = ctx.i18n.__('app.title');
+    //ctx.body = ctx.i18n.__('app.title');
+
+    await ctx.render("home/reg.tpl", {title:"reg"});
 })
-
-
-// views template
-
-
-//csrf & xss
 
 app.use(router());
 

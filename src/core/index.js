@@ -196,7 +196,8 @@ module.exports = class Application extends Emitter {
         // responses
         if (Buffer.isBuffer(body)) return res.end(body);
         if ('string' == typeof body) return res.end(body);
-        if (body instanceof Stream) return body.pipe(res);
+        // res.raw is http response 
+        if (body instanceof Stream) return body.pipe(res.raw);
 
         // body: json
         body = JSON.stringify(body);

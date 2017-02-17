@@ -7,7 +7,7 @@ module.exports = function serve(path, root) {
     // remove / begin
     path = path.replace(/^\/+/, "");
 
-    return function(ctx, next) {
+    return async function(ctx, next) {
         if(ctx.req.method == "HEAD" || ctx.req.method == "GET") {
             let req_path_array = ctx.path.slice(1).split("/");
 
@@ -19,16 +19,11 @@ module.exports = function serve(path, root) {
                     req_path_array = req_path_array.slice(1);
                 }
                 //console.log(ctx.req.headers['accept-encoding']);
-                return send(ctx, req_path_array.join("/") || "/", {root: root}).then(() => {
-                    return next();
-                });
+                await send(ctx, req_path_array.join("/") || "/", {root: root});
             }
         }
 
-        return next();
+        await next();
     }
 
-    // function fileCache(filePath, encode) {
-    //
-    // }
 };

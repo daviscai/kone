@@ -5,8 +5,8 @@ const index = async (ctx) => {
     ctx.log.info('pino logging');
     //ctx.logger.debug('this is debug');
     //let title = ctx.i18n.__('app.title');
-    ctx.body = 'hello index';
-    ctx.status = 200;
+    //ctx.body = 'hello index';
+    //ctx.status = 200;
     //await ctx.render("home/reg.tpl", {title:"reg"});
 };
 
