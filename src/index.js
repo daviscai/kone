@@ -1,4 +1,4 @@
-const fs  = require('fs');
+//const fs  = require('fs');
 const path  = require('path');
 const Kwan = require('./core/');
 const jsonp = require('./middleware/jsonp');
@@ -9,32 +9,36 @@ const bodyParser = require('trek-body-parser');
 const session = require('./middleware/session');
 const i18n = require('./middleware/i18n');
 const views = require('./middleware/template');
+const cors = require('./middleware/cors');
+const csrf = require('./middleware/csrf');
+const helmet = require('./middleware/helmet');
+const favicon = require('./middleware/favicon');
 
 const appDir = path.resolve(__dirname, '..');
 const configDir = path.resolve(__dirname, './config');
 
 const app = new Kwan();
 
-app.use(jsonp());
+app.use(jsonp());  // 9.55
 
-const logDir = path.join(appDir, 'logs');
+const logDir = path.join(appDir, 'logs'); // 10.33
 app.use(logger({
     logDir: logDir,
     logFileName: 'error.log'
 }));
 
 // server static file
-app.use(staticServer('assets',__dirname + '/../assets/'));
+app.use(staticServer('assets',__dirname + '/../assets/'));  // 13.31
 
 // bodyparse
-app.use(bodyParser());
+app.use(bodyParser()); // 15.01
 
 // session
-app.use(session());
+app.use(session()); // 16.53
 
 
 // i18n
-app.use(i18n(app, {
+app.use(i18n(app, {  // 17.78
     //defaultLocale: 'zh-cn',
     cookie: 'lang',
     locales:['zh-cn', 'en'],
@@ -43,141 +47,48 @@ app.use(i18n(app, {
 
 
 // views template
-app.use(views(__dirname + '/views', {
+app.use(views(__dirname + '/views', {  // 18.22
     extension: 'tpl',
     map: {
         tpl: 'nunjucks'
     }
 }));
 
-//csrf & xss
+//cors Cross-Origin Resource Sharing(CORS) middleware
+app.use(cors());  // 19.06
 
+
+//csrf need session middleware
+app.use(csrf());
+
+// header secure,  xss core support
+app.use(helmet());
+
+// http2 support
+
+// favicon
+app.use(favicon(__dirname + '/../favicon.ico'));
+
+// monitor
 
 // 模板必须使用 async/await 异步方式
-app.use( async (ctx)=>{
-
-    ctx.session.user = "tom";
-    let sess = ctx.session;
-    console.log(sess);
-
-    //ctx.i18n.setLocale('zh-cn');
-    //ctx.body = ctx.i18n.__('app.title');
-
-    await ctx.render("home/reg.tpl", {title:"reg"});
-})
-
-app.use(router());
-
-// import Koa from 'koa';
-// import jsonp from 'koa-jsonp';
+// app.use( async (ctx)=>{
 //
-// const app = new Koa();
+//     ctx.session.user = "tom";
+//     let sess = ctx.session;
+//     console.log(sess);
+//     //
+//     ctx.log.info(sess);
+//     //
+//     // //ctx.i18n.setLocale('zh-cn');
+//     // let a = ctx.i18n.__('app.title');
+//     //
+//     // await ctx.render("home/reg.tpl", {title:a});
 //
-// app.use(jsonp());
-//
-// app.use((ctx)=>{
-//     ctx.body = 'hello';
-//     ctx.status = 200;
-// });
+//     ctx.body = ctx.store.get('csrf');
+// })
 
-/*
-import Koa from 'koa';
-import path from 'path';
-import fs from 'fs';
-import jsonp from './middleware/kwan-jsonp';
-import views from 'koa-views';
-import log4js from 'koa-log4';
-import bodyParser from 'koa-bodyparser';
-import session from 'koa-session-minimal';
-import csrf from 'koa-csrf';
-import convert from 'koa-convert';
-import locale from 'koa-locale';
-import i18n from 'koa-i18n';
-import jsonp from 'koa-jsonp';
-import server from 'koa-static2';
-import router from './routers';
+app.use(router());  // 21.98
 
-// Create the app from the ES6 class.
-const app = new Koa();
-
-// app.use(jsonp());  // todo  3ms
-
-const appDir = path.resolve(__dirname, '..');
-const configDir = path.resolve(__dirname, './config');
-const logDir = path.join(appDir, 'logs');
-
-log4js.configure(path.join(appDir, 'log4js.json'), {
-    cwd: logDir,
-    reloadSecs: 1
-});
-const logger = log4js.getLogger('http');
-
-// server static file
-app.use(server("assets", __dirname + '/../assets'));
-
-app.use(jsonp());  // todo  3ms
-
-// for i18n
-locale(app);
-
-// support i18n  // todo 40ms
-app.use(convert(i18n(app, {
-    directory: configDir + '/locales',
-    locales: ['zh-cn', 'en'], //  `zh-cn` defualtLocale, must match the locales to the filenames
-    modes: [ //  If one mode is detected, no continue to detect.
-        'query', //  optional detect querystring - `/?locale=en`
-        'subdomain', //  optional detect subdomain   - `zh-CN.koajs.com`
-        'cookie', //  optional detect cookie      - `Cookie: locale=zh-cn`
-        'header', //  optional detect header      - `Accept-Language: zh-CN,zh;q=0.5`
-        'url', //  optional detect url         - `/en`
-        'tld' //  optional detect tld(the last domain) - `koajs.cn`
-    ]
-})));
-
-
-// support session,  csrf need it
-app.use(session()); // todo 3-5ms
-
-// support body parser
-app.use(bodyParser());
-
-
-// use log4js logger  todo 20-25ms
-app.use(
-    log4js.koaLogger(logger, {level: 'auto'})
-);
-
-// put logger into ctx
-app.use( async (ctx, next)=>{
-    ctx.logger = logger;
-    await next();
-});
-
-// use nunjucks template , todo 50ms
-app.use(views(__dirname + '/views', {
-    extension: 'tpl',
-    map: {
-        tpl: 'nunjucks'
-    }
-}));
-
-// add the CSRF middleware  todo 10ms
-app.keys = ['secret'];
-app.use(new csrf({
-    invalidSessionSecretMessage: 'Invalid session secret',
-    invalidSessionSecretStatusCode: 403,
-    invalidTokenMessage: 'Invalid CSRF token',
-    invalidTokenStatusCode: 403,
-}));
-
-
-// use koa-router router
-// app.use(router.routes(), router.allowedMethods());
-
-app.use((ctx)=>{
-    ctx.body = 'hello';
-    ctx.status = 200;
-});
-*/
 
 export default app;

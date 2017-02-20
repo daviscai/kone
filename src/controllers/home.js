@@ -2,12 +2,18 @@ import Redis from 'ioredis';
 import models from '../models/index';
 
 const index = async (ctx) => {
-    ctx.log.info('pino logging');
-    //ctx.logger.debug('this is debug');
-    //let title = ctx.i18n.__('app.title');
-    //ctx.body = 'hello index';
-    //ctx.status = 200;
-    //await ctx.render("home/reg.tpl", {title:"reg"});
+
+    ctx.body = ctx.query;
+    ctx.session.user = "tom";
+    let sess = ctx.session;
+
+    ctx.log.error(sess);
+
+    ctx.i18n.setLocale('zh-cn');
+    let a = ctx.i18n.__('app.title');
+
+    // 模板必须使用 async/await 异步方式
+    //await ctx.render("home/list.tpl", {title:a});
 };
 
 

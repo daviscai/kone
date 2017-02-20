@@ -427,6 +427,14 @@ module.exports = class Response {
         }
     }
 
+    setHeader(field, val){
+        this.set(field, val)
+    }
+
+    removeHeader(field){
+        this.remove(field);
+    }
+
     /**
      * Append additional header `field` with value `val`.
      *

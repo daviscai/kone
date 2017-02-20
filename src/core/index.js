@@ -6,9 +6,9 @@ const Emitter = require('events');
 const Stream = require('stream');
 const Cookies = require('cookies');
 const Url = require('url');
-//const accepts = require('accepts');
 const compose = require('./compose');
 const Context = require('./context');
+const xssFilters = require('xss-filters');
 
 module.exports = class Application extends Emitter {
 
@@ -92,27 +92,26 @@ module.exports = class Application extends Emitter {
      */
 
     createContext(req, res) {
-        //const context = Object.create(this.context);
         const context = new Context(this, req, res);
-        //const request = context.request = Object.create(this.request);
-        //const response = context.response = Object.create(this.response);
+
         context.app = this;
-        //context.req = req;
-        //context.res = res;
-        //request.ctx = response.ctx = context;
-        //request.response = response;
-        //response.request = request;
         context.originalUrl = req.url;
         context.cookies = new Cookies(req, res, {
             keys: this.keys,
             secure: ''
         });
+
         context.ip = req.socket.remoteAddress || '';
-        context.query = Url.parse(req.url, true).query;
+
+        let query = Url.parse(req.url, true).query;
+        let saftQuery = query;
+        for(let param in query){
+            saftQuery[param] = xssFilters.uriPathInUnQuotedAttr(query[param]);
+        }
+        context.query = saftQuery;
+
         context.path = Url.parse(req.url, true).pathname;
-        //context.acceptsEncodings = req.headers['accept-encoding'];
-        //context.accept = request.accept = accepts(req);
-        context.state = {};
+
 
         return context;
     }
@@ -196,7 +195,7 @@ module.exports = class Application extends Emitter {
         // responses
         if (Buffer.isBuffer(body)) return res.end(body);
         if ('string' == typeof body) return res.end(body);
-        // res.raw is http response 
+        // res.raw is http response
         if (body instanceof Stream) return body.pipe(res.raw);
 
         // body: json
