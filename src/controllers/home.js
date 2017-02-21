@@ -13,7 +13,7 @@ const index = async (ctx) => {
     let a = ctx.i18n.__('app.title');
 
     // 模板必须使用 async/await 异步方式
-    //await ctx.render("home/list.tpl", {title:a});
+    await ctx.render("home/list.tpl", {title:a});
 };
 
 

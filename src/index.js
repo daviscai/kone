@@ -1,4 +1,4 @@
-//const fs  = require('fs');
+const fs  = require('fs');
 const path  = require('path');
 const Kwan = require('./core/');
 const jsonp = require('./middleware/jsonp');
@@ -17,7 +17,16 @@ const favicon = require('./middleware/favicon');
 const appDir = path.resolve(__dirname, '..');
 const configDir = path.resolve(__dirname, './config');
 
-const app = new Kwan();
+// http2 support
+// openssl req -newkey rsa:2048 -new -nodes -keyout key.pem -out csr.pem
+// openssl x509 -req -days 365 -in csr.pem -signkey key.pem -out server.crt
+const app = new Kwan({
+    key: fs.readFileSync(configDir + '/key.pem'),
+    cert: fs.readFileSync(configDir + '/server.crt')
+});
+
+// http only
+//const app = new Kwan();
 
 app.use(jsonp());  // 9.55
 

@@ -2,6 +2,7 @@
 
 const statuses = require('statuses');
 const http = require('http');
+const http2 = require('http2');
 const Emitter = require('events');
 const Stream = require('stream');
 const Cookies = require('cookies');
@@ -18,7 +19,7 @@ module.exports = class Application extends Emitter {
      * @api public
      */
 
-    constructor() {
+    constructor(options) {
         super();
 
         //this.proxy = false;
@@ -28,6 +29,7 @@ module.exports = class Application extends Emitter {
         this.context = {};
         this.request = {};
         this.response = {};
+        this.options = options || {};
 
         //this.context = new Context(this, req, res);
         // this.request = Object.create(request);
@@ -45,7 +47,12 @@ module.exports = class Application extends Emitter {
      */
 
     listen() {
-        const server = http.createServer(this.callback());
+        let server = null;
+        if(this.options.key && this.options.cert){
+            server = http2.createServer({key:this.options.key, cert:this.options.cert}, this.callback());
+        }else{
+            server = http.createServer(this.callback());
+        }
         return server.listen.apply(server, arguments);
     }
 
