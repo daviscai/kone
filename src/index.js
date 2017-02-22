@@ -73,8 +73,6 @@ app.use(csrf());
 // header secure,  xss core support
 app.use(helmet());
 
-// http2 support
-
 // favicon
 app.use(favicon(__dirname + '/../favicon.ico'));
 
@@ -100,4 +98,4 @@ app.use(favicon(__dirname + '/../favicon.ico'));
 app.use(router());  // 21.98
 
 
-export default app;
+module.exports = app;

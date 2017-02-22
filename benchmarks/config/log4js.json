@@ -1,0 +1,35 @@
+{
+  "appenders": [
+    {
+      "type": "console"
+    },
+    {
+      "type": "clustered",
+      "appenders": [
+        {
+          "category": "http",
+          "type": "logLevelFilter",
+          "level": "WARN",
+          "maxLevel": "FATAL",
+          "appender": {
+              "type": "dateFile",
+              "filename": "error.log",
+              "pattern": "-yyyy-MM-dd.bak"
+          }
+        },
+        {
+          "category": "http",
+          "type": "logLevelFilter",
+          "level": "TRACE",
+          "maxLevel": "DEBUG",
+          "appender": {
+              "type": "dateFile",
+              "filename": "debug.log",
+              "pattern": "-yyyy-MM-dd.bak"
+          }
+        }
+
+      ]
+    }
+  ]
+}

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 echo
-MW=$1 node ./bench_middleware/$2 &
+MW=$1 node ./dist/bench_middleware/$2 &
 pid=$!
 
 if [ "$2" == "express" ]; then

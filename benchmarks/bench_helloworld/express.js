@@ -2,7 +2,7 @@
 
 // https://github.com/koajs/koa/pull/751
 //if (process.env.OVERRIDE_PROMISE) {
-//  global.Promise = require('bluebird')
+global.Promise = require('bluebird')
 //}
 
 const express = require('express')
@@ -15,7 +15,7 @@ let n = parseInt(process.env.MW || '1', 10)
 console.log(`  ${n} middleware`)
 
 while (n--) {
-  app.use((req, res, next) => next())
+    app.use((req, res, next) => next())
 }
 
 const body = new Buffer('Hello World')

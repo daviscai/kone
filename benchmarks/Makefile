@@ -9,7 +9,7 @@ helloworld:
 	@./bench_helloworld/run 5 express
 
 middleware:
-	@./bench_middleware/run 1 kwan
-	@./bench_middleware/run 1 koa
+	@./dist/bench_middleware/run 1 kwan
+	@./dist/bench_middleware/run 1 koa
 
 .PHONY: all trek koa toa express battle
