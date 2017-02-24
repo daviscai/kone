@@ -126,6 +126,7 @@ app.listen(7005);
  *
 ```
  kwan vs koa , use jsonp , logger, router middleware
+ ./node_modules/.bin/autocannon -c 100 -d 5
 ------- kwan -------
 xxx("hello index");
 Stat         Avg     Stdev     Max
@@ -147,6 +148,7 @@ Bytes/Sec    473.5 kB 45.88 kB 524.29 kB
 
 ```
  kwan vs koa , use jsonp , logger, static, bodyparse, session, i18n, csrf, template middleware
+  ./node_modules/.bin/autocannon -c 100 -d 5
  ------- kwan -------
  xxx("kwan is a framework base on Koa2 for node.js");
  Stat         Avg       Stdev     Max

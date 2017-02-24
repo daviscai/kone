@@ -54,7 +54,7 @@ function catchErr(ctx, handler) {
         }
         ctx.log.error({
             res: ctx.res,
-            err: {
+            err: { 
                 type: e.constructor.name,
                 message: e.message,
                 stack: e.stack

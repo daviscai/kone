@@ -52,7 +52,7 @@ module.exports = async function(ctx, path, opts) {
     //serve gzipped file when possible
     if (encoding === 'gzip' && gzip && (await fs.exists(path + '.gz'))) {
         path = path + '.gz';
-        ctx.set('Content-Encoding', 'gzip');
+        ctx.res.set('Content-Encoding', 'gzip');
         ctx.res.removeHeader('Content-Length');
     }
 

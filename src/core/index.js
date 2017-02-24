@@ -1,5 +1,6 @@
 'use strict';
 
+global.Promise = require('bluebird')
 const statuses = require('statuses');
 const http = require('http');
 const http2 = require('http2');
@@ -24,6 +25,7 @@ module.exports = class Application extends Emitter {
 
         //this.proxy = false;
         this.middleware = [];
+        this.lastMiddleware = [];
         //this.subdomainOffset = 2;
         this.env = process.env.NODE_ENV || 'development';
         this.context = {};
@@ -72,6 +74,13 @@ module.exports = class Application extends Emitter {
         return this;
     }
 
+
+    last(fn){
+        if (typeof fn !== 'function') throw new TypeError('last middleware must be a function!');
+        this.lastMiddleware.push(fn);
+        return this;
+    }
+
     /**
      * Return a request handler callback
      * for node's native http server.
@@ -81,13 +90,45 @@ module.exports = class Application extends Emitter {
      */
 
     callback() {
+        //洋葱模型下的中间件
         const fn = compose(this.middleware);
+
+        // async/await 性能较差
+        // return async (req, res)=>{
+        //     try{
+        //         const ctx = this.createContext(req, res);
+        //         await fn(ctx);
+        //         if (this.lastMiddleware) {
+        //             const last = compose(this.lastMiddleware);
+        //             await last(ctx);
+        //             this.respond(ctx);
+        //         } else {
+        //             this.respond(ctx);
+        //         }
+        //     }catch(err){
+        //         this.onerror(res, err);
+        //     }
+        // }
 
         return (req, res) => {
             const ctx = this.createContext(req, res);
             const onerror = err => this.onerror(res, err);
             fn(ctx).then(() => {
-                this.respond(ctx);
+                if(this.lastMiddleware){
+                    // 需要最后执行的中间件，比如jsonp中间件，在洋葱模型以外再添加一层，这样可以避免使用async/await，目的是为了提高性能
+                    // 下面是 autocannon -c 100 -d 5 压测下 Latency (ms) avg
+                    //
+                    // const app = new Kwan(); // not any middleware      7.33 ~ 7.96
+                    // app.use(jsonp());   // middleware use async/await, 9.53 ~ 10.72 | 11.78 ~ 13.17
+                    // app.last(jsonp());  // not use async/await,        7.96 ~ 8.51  | 9.9   ~ 10.32
+
+                    const last = compose(this.lastMiddleware);
+                    last(ctx).then(()=>{
+                        this.respond(ctx);
+                    }).catch(onerror);
+                }else{
+                    this.respond(ctx);
+                }
             }).catch(onerror);
         };
     }
@@ -166,8 +207,7 @@ module.exports = class Application extends Emitter {
      */
 
     respond(ctx) {
-        // allow bypassing koa
-        //if (false === ctx.respond) return;
+        if (false === ctx.res) return;
 
         const res = ctx.res;
         //if (!ctx.writable) return;
@@ -183,31 +223,34 @@ module.exports = class Application extends Emitter {
         }
 
         if ('HEAD' == ctx.req.method) {
-            // if (!res.headersSent && this.isJSON(body)) {
-            //     ctx.length = Buffer.byteLength(JSON.stringify(body));
-            // }
+            if (!res.raw.headersSent && this.isJSON(body)) {
+                ctx.length = Buffer.byteLength(JSON.stringify(body));
+            }
             return res.end();
         }
 
         // status body
         if (null == body) {
             body = ctx.message || String(code);
-            // if (!res.headersSent) {
-            //     ctx.type = 'text';
-            //     ctx.length = Buffer.byteLength(body);
-            // }
+            if (!res.raw.headersSent) {
+                ctx.type = 'text';
+                ctx.length = Buffer.byteLength(body);
+            }
             return res.end(body);
         }
 
         // responses
         if (Buffer.isBuffer(body)) return res.end(body);
-        if ('string' == typeof body) return res.end(body);
-        // res.raw is http response
-        if (body instanceof Stream) return body.pipe(res.raw);
-
+        if ('string' == typeof body){
+            return res.end(body);
+        }
+        if (body instanceof Stream) {
+            // res.raw is http response
+            return body.pipe(res.raw);
+        }
         // body: json
         body = JSON.stringify(body);
-        if (!res.headersSent) {
+        if (!res.raw.headersSent) {
             ctx.length = Buffer.byteLength(body);
         }
         res.end(body);

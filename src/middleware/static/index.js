@@ -1,11 +1,10 @@
 "use strict"
 
-//const send = require("koa-send");
 const send = require("./send");
 
 module.exports = function serve(path, root) {
     // remove / begin
-    path = path.replace(/^\/+/, "");
+    path = path.indexOf('/') > -1 ? path.replace(/^\/+/, "") : path;
 
     return async function(ctx, next) {
         if(ctx.req.method == "HEAD" || ctx.req.method == "GET") {
@@ -23,7 +22,7 @@ module.exports = function serve(path, root) {
             }
         }
 
-        await next();
+        return next();
     }
 
 };

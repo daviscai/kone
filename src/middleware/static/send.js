@@ -52,7 +52,7 @@ module.exports = async function(ctx, path, opts) {
     //serve gzipped file when possible
     if (encoding === 'gzip' && gzip && (await fs.exists(path + '.gz'))) {
         path = path + '.gz';
-        ctx.set('Content-Encoding', 'gzip');
+        ctx.res.set('Content-Encoding', 'gzip');
         ctx.res.removeHeader('Content-Length');
     }
 
@@ -93,7 +93,7 @@ module.exports = async function(ctx, path, opts) {
         throw err;
     }
 
-    if (setHeaders) setHeaders(ctx.res, path, stats);
+    //if (setHeaders) setHeaders(ctx.res, path, stats);
 
     // stream
     ctx.res.set('Content-Length', stats.size);
@@ -101,7 +101,6 @@ module.exports = async function(ctx, path, opts) {
     if (!ctx.res.get('Cache-Control')) ctx.res.set('Cache-Control', 'max-age=' + (maxage / 1000 | 0));
     ctx.res.set('content-type', type(path));
     ctx.body =  fs.createReadStream(path);
-
     return path;
 
 }

@@ -1,5 +1,4 @@
 'use strict';
-//const Promise = require('any-promise')
 //https://github.com/koajs/koa/pull/751
 const Promise = require('bluebird')
 
