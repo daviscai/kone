@@ -1,5 +1,4 @@
-const fs = require('fs');
-const request = require('request');
+//const fs = require('fs');
 const path = require('path');
 const Kwan = require('./core/');
 const jsonp = require('./middleware/jsonp');
@@ -16,6 +15,7 @@ const helmet = require('./middleware/helmet');
 const favicon = require('./middleware/favicon');
 
 
+
 const appDir = path.resolve(__dirname, '..');
 const configDir = path.resolve(__dirname, './config');
 
@@ -28,29 +28,29 @@ const configDir = path.resolve(__dirname, './config');
 // });
 
 // http only
-const app = new Kwan(); // 7.33 - 7.96
+const app = new Kwan();
 
-app.last(jsonp());  // 7.96 - 8.51 | 9.9 - 10.32
+app.last(jsonp());
 
 
-const logDir = path.join(appDir, 'logs'); // 10.13 ~ 10.91
+const logDir = path.join(appDir, 'logs');
 app.use(logger({
     logDir: logDir,
     logFileName: 'error.log'
 }));
 
 // server static file
-app.last(staticServer('assets',__dirname + '/../assets/'));  // 10.01 ~ 10.44
+app.last(staticServer('assets',__dirname + '/../assets/'));
 
 // bodyparse
-app.use(bodyParser()); // 8.63 ~ 9.27
+app.use(bodyParser());
 
 // session
-app.use(session()); //13.66 ~ 15.41  7.73 ~ 9.33
+app.use(session());
 
 
 // i18n
-app.use(i18n(app, {  // 9.44 ~ 9.94
+app.use(i18n(app, {
     //defaultLocale: 'zh-cn',
     cookie: 'lang',
     locales:['zh-cn', 'en'],
@@ -59,7 +59,7 @@ app.use(i18n(app, {  // 9.44 ~ 9.94
 
 
 // views template
-app.use(views(__dirname + '/views', {  // 18.22
+app.use(views(__dirname + '/views', {
     extension: 'tpl',
     map: {
         tpl: 'nunjucks'
@@ -67,40 +67,21 @@ app.use(views(__dirname + '/views', {  // 18.22
 }));
 
 //cors Cross-Origin Resource Sharing(CORS) middleware
-app.use(cors());  // 8.82 ~ 9.73
+app.use(cors());
 
 
 //csrf need session middleware
-app.use(csrf());  // 12.5 ~ 13.83
+app.use(csrf());
 
 // header secure,  xss core support
-app.use(helmet());  // 11.57 ~ 12.8
+app.use(helmet());
 
 // favicon
-app.use(favicon(__dirname + '/../favicon.ico'));  // 9.91 ~ 10.62
+app.use(favicon(__dirname + '/../favicon.ico'));
 
 // monitor
 
-// 模板必须使用 async/await 异步方式
-app.use(async(ctx) => {  // 28.2 ~ 30.88  | with template , 98.13 ~ 105
-
-    ctx.session.user = "tom3";
-    let sess = ctx.session;
-    // console.log(sess);
-    // //
-    ctx.log.info('abc');
-    // //
-    // // //ctx.i18n.setLocale('zh-cn');
-    let a = ctx.i18n.__('app.title');
-    //
-    await ctx.render("home/reg.tpl", {title:a});
-    // ctx.store.get('csrf');
-
-    //ctx.body = 'aaa';
-    //ctx.status = 200;
-})
-
-//app.use(router());  // 21.98
+app.use(router());
 
 
 module.exports = app;

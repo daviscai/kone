@@ -2,12 +2,12 @@
  * index.js base on https://github.com/queckezz/koa-views
  * Created by Davis Cai on 2017/02/17
  * Copyright (c) 2017 Davis Cai, caiwxiong@qq.com
+ * about template benchmarks https://github.com/marko-js/templating-benchmarks
  */
 
 'use strict'
 
 const {resolve,dirname,extname,join} = require('path')
-//const debug = require('debug')('koa-views')
 const consolidate = require('consolidate')
 const {stat} = require('mz/fs')
 const send = require('./send')
@@ -27,9 +27,7 @@ function viewsMiddleware(path, {
             extension = (extname(relPath) || '.' + extension).slice(1)
             let {rel,abs} = await getPaths(path, relPath, extension);
             const state = Object.assign(locals, options, ctx.state || {})
-
             ctx.type = 'text/html'
-
             if (isHtml(extension) && !map) {
                 await send(ctx, rel, {
                     root: path
@@ -40,7 +38,6 @@ function viewsMiddleware(path, {
                     extension
 
                 const render = engineSource[engineName]
-
                 if (!engineName || !render) return Promise.reject(new Error(
                     `Engine not found for the ".${extension}" file extension`
                 ))

@@ -17,6 +17,11 @@ node version : v6.9.0
 "toa": "^2.5.1",
 "trek-engine": "^0.5.3"
 
+电脑配置：
+MacBook Air (13-inch, Early 2014)
+cpu : 1.4 GHz Intel Core i5
+内存： 4 GB 1600 MHz DDR3
+
 $ npm run bench
 
 > banchmarks@1.0.0 bench /Users/caidavis/Documents/git/kwan/benchmarks
@@ -87,109 +92,159 @@ Bytes/Sec    842.14 kB 38.21 kB 884.74 kB
 
 $ npm run bench-mw
 
-3个常用中间件
-```
- kwan vs koa , use jsonp , logger, router middleware
- ./node_modules/.bin/autocannon -c 100 -d 5
-------- kwan -------
-xxx("hello index");
-Stat         Avg     Stdev     Max
-Latency (ms) 15.59   5.44      98
-Req/Sec      6214    653.4     6727
-Bytes/Sec    1.14 MB 120.66 kB 1.25 MB
 
-31k requests in 5s, 5.69 MB read
+### 未使用模板渲染
+
+全部常用中间件 ：jsonp,router,logger,staticServer,bodyParser,session,i18n,cors,csrf,helmet,favicon,router，template
+
+#### koa未使用 bluebird， kwan 使用了 bluebird
+
+QPS(每秒请求数), kwan 比 koa 大概多2100次
+
+```
+------- kwan -------
+xxx("aaa");
+Stat         Avg     Stdev    Max
+Latency (ms) 28.34   9.53     131
+Req/Sec      3467    360.68   3763
+Bytes/Sec    1.06 MB 115.2 kB 1.18 MB
+
+17k requests in 5s, 5.34 MB read
 
 ------- koa -------
-;xxx("hello koa");
-Stat         Avg      Stdev    Max
-Latency (ms) 34.04    8.11     139
-Req/Sec      2887.8   281.44   3131
-Bytes/Sec    473.5 kB 45.88 kB 524.29 kB
+;xxx("hello");
+Stat         Avg      Stdev   Max
+Latency (ms) 75.22    11.25   229
+Req/Sec      1313.4   55.11   1372
+Bytes/Sec    208.9 kB 8.97 kB 221.18 kB
 
-14k requests in 5s, 2.37 MB read
+7k requests in 5s, 1.05 MB read
 ```
 
-8个常用中间件，QPS(每秒请求数), kwan 比 koa 多一倍
+#### koa和kwan 均使用了 bluebird
+
+QPS(每秒请求数), kwan 比 koa 大概多700次
+
 ```
-kwan vs koa , use jsonp , logger, static, bodyparse, session, i18n, csrf, template middleware
- ./node_modules/.bin/autocannon -c 100 -d 5
 ------- kwan -------
-xxx("kwan is a framework base on Koa2 for node.js");
+xxx("aaa");
 Stat         Avg       Stdev     Max
-Latency (ms) 42.13     14.19     163
-Req/Sec      2341.2    331.03    2601
-Bytes/Sec    989.59 kB 146.03 kB 1.11 MB
+Latency (ms) 30.77     10.84     148
+Req/Sec      3197.4    469.93    3507
+Bytes/Sec    996.15 kB 147.05 kB 1.11 MB
 
-12k requests in 5s, 4.95 MB read
+16k requests in 5s, 4.92 MB read
 
-koa deprecated Support for generators will been removed in v3. See the documentation for examples of how to convert old middleware https://github.com/koajs/koa/tree/v2.x#old-signature-middleware-v1x---deprecated dist/bench_middleware/koa.js:73:5
 ------- koa -------
 ;xxx("hello");
 Stat         Avg       Stdev   Max
-Latency (ms) 78.22     15.16   266
-Req/Sec      1263.41   68.79   1329
-Bytes/Sec    202.34 kB 9.55 kB 212.99 kB
+Latency (ms) 40.05     17.08   195
+Req/Sec      2466.4    448.64  2953
+Bytes/Sec    394.85 kB 69.2 kB 475.13 kB
 
-6k requests in 5s, 1.01 MB read
+12k requests in 5s, 1.97 MB read
+
+------- kwan -------
+xxx("aaa");
+Stat         Avg     Stdev     Max
+Latency (ms) 28.5    9.51      144
+Req/Sec      3445.4  402.31    3701
+Bytes/Sec    1.05 MB 127.92 kB 1.18 MB
+
+17k requests in 5s, 5.31 MB read
+
+------- koa -------
+;xxx("hello");
+Stat         Avg       Stdev    Max
+Latency (ms) 35.09     14.09    187
+Req/Sec      2809      362.69   3111
+Bytes/Sec    447.28 kB 58.07 kB 507.9 kB
+
+14k requests in 5s, 2.25 MB read
 ```
+
+
+
+### 使用模板渲染，模板引擎是 nunjucks
+
+全部常用中间件 ：jsonp,router,logger,staticServer,bodyParser,session,i18n,cors,csrf,helmet,favicon,router，template
+
+#### koa未使用 bluebird， kwan 使用了 bluebird
+
+QPS(每秒请求数), kwan 比 koa 大概多200次
+
+```
+------- kwan -------
+xxx("\n<h2>kwan is a framework base on Koa2 for node.js</h2>\n");
+Stat         Avg       Stdev    Max
+Latency (ms) 64.67     19.95    206
+Req/Sec      1526.8    252.85   1800
+Bytes/Sec    543.95 kB 86.79 kB 655.36 kB
+
+8k requests in 5s, 2.76 MB read
+
+------- koa -------
+;xxx("\n<h2>aaa</h2>\n");
+Stat         Avg       Stdev    Max
+Latency (ms) 76.94     22.77    256
+Req/Sec      1282.6    204.18   1475
+Bytes/Sec    220.36 kB 34.99 kB 253.95 kB
+
+6k requests in 5s, 1.1 MB read
+```
+
+#### koa和kwan 均使用了 bluebird
+
+QPS(每秒请求数), kwan 比 koa 大概多100次
+
+```
+------- kwan -------
+xxx("\n<h2>kwan is a framework base on Koa2 for node.js</h2>\n");
+Stat         Avg       Stdev    Max
+Latency (ms) 65.56     21.48    208
+Req/Sec      1503      264.29   1717
+Bytes/Sec    539.03 kB 88.59 kB 622.59 kB
+
+8k requests in 5s, 2.72 MB read
+
+------- koa -------
+;xxx("\n<h2>aaa</h2>\n");
+Stat         Avg       Stdev    Max
+Latency (ms) 68.73     21.07    214
+Req/Sec      1438      180.4    1592
+Bytes/Sec    246.58 kB 32.09 kB 278.53 kB
+
+7k requests in 5s, 1.23 MB read
+
+------- kwan -------
+xxx("\n<h2>kwan is a framework base on Koa2 for node.js</h2>\n");
+Stat         Avg       Stdev    Max
+Latency (ms) 64.57     21.22    221
+Req/Sec      1532.6    228.63   1741
+Bytes/Sec    558.69 kB 82.31 kB 655.36 kB
+
+8k requests in 5s, 2.77 MB read
+
+------- koa -------
+;xxx("\n<h2>aaa</h2>\n");
+Stat         Avg       Stdev   Max
+Latency (ms) 70.49     23.96   254
+Req/Sec      1406      249.92  1686
+Bytes/Sec    240.03 kB 41.5 kB 294.91 kB
+
+7k requests in 5s, 1.2 MB read
+```
+
+结论：
+1. 未使用模板渲染下，kwan比koa快1.6倍，koa默认没有使用 bluebird，如果使用bluebird代替默认的Promise，性能会提升较多，但kwan比koa依然快24%
+2. 使用模板渲染下，kwan和koa性能差不多，kwan在模板渲染方面还有优化空间
 
 
 ## why 为什么会快这么多
 1. 基于 koa2 application.js 核心功能，简化上下文，采用trekjs的request和response，去掉了delegate代理模块
-2. 中间件的处理改用迭代器 iterator，不用递归调用的方式
+2. 中间件合并处理compose改用迭代器 iterator，不用递归调用的方式
 3. Promise采用性能更快的bluebird，性能提升显著
-4. 所有中间件都采用async/await方式，对比多种实现方案后选择最优的一种
-5. 通过 node prof 分析瓶颈和优化
-
-
-$ ./node_modules/.bin/autocannon -c 100 -d 5 http://127.0.0.1:4000
-Running 5s test @ http://127.0.0.1:4000
-100 connections
-
-Stat         Avg       Stdev    Max
-Latency (ms) 35.66     6.7      91
-Req/Sec      2750.2    171.96   2995
-Bytes/Sec    940.44 kB 56.38 kB 1.05 MB
-
-14k requests in 5s, 4.7 MB read
---------------------------------------
-
-$ ./node_modules/.bin/autocannon -c 100 -d 5 http://127.0.0.1:4000
-Running 5s test @ http://127.0.0.1:4000
-100 connections
-
-Stat         Avg     Stdev     Max
-Latency (ms) 7.79    4.87      111
-Req/Sec      12082.4 1623.14   13183
-Bytes/Sec    1.24 MB 172.27 kB 1.38 MB
-
-60k requests in 5s, 6.16 MB read
---------------------------------------
-
-$ ./node_modules/.bin/autocannon -c 100 -d 5 http://127.0.0.1:4000
-Running 5s test @ http://127.0.0.1:4000
-100 connections
-
-Stat         Avg       Stdev    Max
-Latency (ms) 28.63     6.18     87
-Req/Sec      3437.4    332.93   3641
-Bytes/Sec    914.23 kB 89.38 kB 983.04 kB
-
-17k requests in 5s, 4.61 MB read
-
-
-with template middleware:
-$ ./node_modules/.bin/autocannon -c 100 -d 5 http://127.0.0.1:4000
-Running 5s test @ http://127.0.0.1:4000
-100 connections
-
-Stat         Avg       Stdev    Max
-Latency (ms) 98.13     14.78    177
-Req/Sec      1006.4    72.58    1113
-Bytes/Sec    730.73 kB 52.43 kB 819.2 kB
-
-5k requests in 5s, 3.69 MB read
+4. 在洋葱模型之外添加一层最后处理中间层，避免部分中间件采用async/await方式处理，async/await对性能有一定影响。
 
 
 ## License

@@ -129,6 +129,8 @@ module.exports = class Application extends Emitter {
                 }else{
                     this.respond(ctx);
                 }
+                // if not return will get Warning see http://goo.gl/rRqMUw
+                return null;
             }).catch(onerror);
         };
     }
@@ -199,6 +201,7 @@ module.exports = class Application extends Emitter {
         res.status = err.status;
         res.length = Buffer.byteLength(msg);
         res.end(msg);
+        return null;
     }
 
 

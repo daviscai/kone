@@ -7,7 +7,7 @@
 
 const path  = require('path');
 const Koa = require('koa');
-//const router = require('koa-router')();
+const Router = require('koa-router');
 const views = require('koa-views');
 const log4js = require('koa-log4');
 const bodyParser = require('koa-bodyparser');
@@ -18,7 +18,9 @@ const locale = require('koa-locale');
 const i18n = require('koa-i18n');
 const jsonp = require('koa-jsonp');
 const server = require('koa-static2');
-//const router = './routers';
+
+var router = new Router();
+
 
 // Create the app from the ES6 class.
 const app = new Koa();
@@ -37,12 +39,12 @@ const logger = log4js.getLogger('http');
 // server static file
 app.use(server("assets", appDir + '/assets'));
 
-app.use(jsonp());  // todo  3ms
+app.use(jsonp());
 
 // for i18n
 locale(app);
 
-// support i18n  // todo 40ms
+// support i18n
 app.use(convert(i18n(app, {
     directory: configDir + '/locales',
     locales: ['zh-cn', 'en'], //  `zh-cn` defualtLocale, must match the locales to the filenames
@@ -58,24 +60,24 @@ app.use(convert(i18n(app, {
 
 
 // support session,  csrf need it
-app.use(session()); // todo 3-5ms
+app.use(session());
 
 // support body parser
-app.use(bodyParser());
+app.use(convert(bodyParser()));
 
 
-// use log4js logger  todo 20-25ms
+// use log4js logger
 // app.use(
 //     log4js.koaLogger(logger, {level: 'auto'})
 // );
 
-// put logger into ctx
-app.use( async (ctx, next)=>{
-    ctx.logger = logger;
-    await next();
-});
+// // put logger into ctx
+// app.use( async (ctx, next)=>{
+//     ctx.logger = logger;
+//     await next();
+// });
 
-// use nunjucks template , todo 50ms
+// use nunjucks template
 app.use(views(appDir + '/app/views', {
     extension: 'tpl',
     map: {
@@ -83,7 +85,7 @@ app.use(views(appDir + '/app/views', {
     }
 }));
 
-// add the CSRF middleware  todo 10ms
+// add the CSRF middleware 
 app.keys = ['secret'];
 app.use(new csrf({
     invalidSessionSecretMessage: 'Invalid session secret',
@@ -92,12 +94,16 @@ app.use(new csrf({
     invalidTokenStatusCode: 403
 }));
 
-// use koa-router router
-//app.use(router.routes(), router.allowedMethods());
+router.get('/', async function (ctx, next) {
+    //logger.error('index do some awesome things');
 
-app.use((ctx)=>{
-    ctx.body = 'hello';
-    ctx.status = 200;
+    //ctx.body = 'hello';
+    //ctx.status = 200;
+    await ctx.render("home/reg.tpl", {title:'aaa'});
 });
+
+// use koa-router router
+app.use(router.routes(), router.allowedMethods());
+
 
 app.listen(7002)

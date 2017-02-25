@@ -17,7 +17,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var path = require('path');
 var Koa = require('koa');
-//const router = require('koa-router')();
+var Router = require('koa-router');
 var views = require('koa-views');
 var log4js = require('koa-log4');
 var bodyParser = require('koa-bodyparser');
@@ -28,7 +28,8 @@ var locale = require('koa-locale');
 var i18n = require('koa-i18n');
 var jsonp = require('koa-jsonp');
 var server = require('koa-static2');
-//const router = './routers';
+
+var router = new Router();
 
 // Create the app from the ES6 class.
 var app = new Koa();
@@ -70,36 +71,18 @@ app.use(convert(i18n(app, {
 app.use(session()); // todo 3-5ms
 
 // support body parser
-app.use(bodyParser());
+app.use(convert(bodyParser()));
 
 // use log4js logger  todo 20-25ms
 // app.use(
 //     log4js.koaLogger(logger, {level: 'auto'})
 // );
 
-// put logger into ctx
-app.use(function () {
-    var _ref = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee(ctx, next) {
-        return _regenerator2.default.wrap(function _callee$(_context) {
-            while (1) {
-                switch (_context.prev = _context.next) {
-                    case 0:
-                        ctx.logger = logger;
-                        _context.next = 3;
-                        return next();
-
-                    case 3:
-                    case 'end':
-                        return _context.stop();
-                }
-            }
-        }, _callee, undefined);
-    }));
-
-    return function (_x, _x2) {
-        return _ref.apply(this, arguments);
-    };
-}());
+// // put logger into ctx
+// app.use( async (ctx, next)=>{
+//     ctx.logger = logger;
+//     await next();
+// });
 
 // use nunjucks template , todo 50ms
 app.use(views(appDir + '/app/views', {
@@ -118,12 +101,29 @@ app.use(new csrf({
     invalidTokenStatusCode: 403
 }));
 
-// use koa-router router
-//app.use(router.routes(), router.allowedMethods());
+router.get('/', function () {
+    var _ref = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee(ctx, next) {
+        return _regenerator2.default.wrap(function _callee$(_context) {
+            while (1) {
+                switch (_context.prev = _context.next) {
+                    case 0:
+                        _context.next = 2;
+                        return ctx.render("home/reg.tpl", { title: 'aaa' });
 
-app.use(function (ctx) {
-    ctx.body = 'hello';
-    ctx.status = 200;
-});
+                    case 2:
+                    case 'end':
+                        return _context.stop();
+                }
+            }
+        }, _callee, this);
+    }));
+
+    return function (_x, _x2) {
+        return _ref.apply(this, arguments);
+    };
+}());
+
+// use koa-router router
+app.use(router.routes(), router.allowedMethods());
 
 app.listen(7002);

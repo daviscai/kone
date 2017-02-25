@@ -2,18 +2,19 @@ import Redis from 'ioredis';
 import models from '../models/index';
 
 const index = async (ctx) => {
-
-    ctx.body = ctx.query;
-    ctx.session.user = "tom";
+    ctx.session.user = "tom3";
     let sess = ctx.session;
 
-    ctx.log.error(sess);
+    ctx.log.info('abc');
 
-    ctx.i18n.setLocale('zh-cn');
     let a = ctx.i18n.__('app.title');
 
-    // 模板必须使用 async/await 异步方式
-    await ctx.render("home/list.tpl", {title:a});
+    ctx.store.get('csrf');
+
+    await ctx.render("home/reg.tpl", {title:a});
+
+    //ctx.body = 'aaa';
+    //ctx.status = 200;
 };
 
 
@@ -30,14 +31,14 @@ const testCsrf = (ctx)=>{
 
 const testLogger = (ctx)=>{
     /*
-    ctx.logger.trace('this is trace');
-    ctx.logger.debug('this is debug');
-    ctx.logger.info('this is info');
-    ctx.logger.warn('this is warn');
-    ctx.logger.error('this is error');
-    ctx.logger.fatal('this is fatal');
+    ctx.log.trace('this is trace');
+    ctx.log.debug('this is debug');
+    ctx.log.info('this is info');
+    ctx.log.warn('this is warn');
+    ctx.log.error('this is error');
+    ctx.log.fatal('this is fatal');
     */
-    ctx.logger.debug('this is debug');
+    ctx.log.debug('this is debug');
     ctx.status = 200;
 };
 
