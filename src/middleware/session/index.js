@@ -58,7 +58,7 @@ export class Store {
 }
 
 module.exports = function(opts = {}) {
-    opts.key = opts.key || "kwan:sess";
+    opts.key = opts.key || "kone:sess";
     opts.store = opts.store || new Store();
 
     return  function(ctx, next) {

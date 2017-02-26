@@ -8,7 +8,7 @@
 const path  = require('path');
 const appDir = path.resolve(__dirname, '../../../');
 
-const Kwan  = require(appDir+'/app/core/');
+const Kone  = require(appDir+'/app/core/');
 const jsonp = require(appDir+'/app/middleware/jsonp');
 const router = require(appDir+'/app/middleware/router');
 const logger = require(appDir+'/app/middleware/logger');
@@ -25,7 +25,7 @@ const favicon = require(appDir+'/app/middleware/favicon');
 
 const configDir = path.resolve(__dirname, appDir+'/app/config');
 
-const app = new Kwan();
+const app = new Kone();
 
 app.last(jsonp());
 
@@ -68,7 +68,7 @@ app.use(favicon(appDir+'/favicon.ico'));
 
 
 //views template
-app.use(views(appDir+'/app/views', { 
+app.use(views(appDir+'/app/views', {
     extension: 'tpl',
     map: {
         tpl: 'nunjucks'

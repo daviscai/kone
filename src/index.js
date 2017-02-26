@@ -1,6 +1,6 @@
 //const fs = require('fs');
 const path = require('path');
-const Kwan = require('./core/');
+const Kone = require('./core/');
 const jsonp = require('./middleware/jsonp');
 const router = require('./middleware/router');
 const logger = require('./middleware/logger');
@@ -22,13 +22,13 @@ const configDir = path.resolve(__dirname, './config');
 // http2 support
 // openssl req -newkey rsa:2048 -new -nodes -keyout key.pem -out csr.pem
 // openssl x509 -req -days 365 -in csr.pem -signkey key.pem -out server.crt
-// const app = new Kwan({
+// const app = new Kone({
 //     key: fs.readFileSync(configDir + '/key.pem'),
 //     cert: fs.readFileSync(configDir + '/server.crt')
 // });
 
 // http only
-const app = new Kwan();
+const app = new Kone();
 
 app.last(jsonp());
 

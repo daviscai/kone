@@ -26,26 +26,25 @@ var configDir = path.resolve(__dirname, appDir + '/app/config');
 
 var app = new Kone();
 
-app.last(jsonp()); // 9.55
+app.last(jsonp());
 
-var logDir = path.join(appDir, 'logs'); // 10.33
+var logDir = path.join(appDir, 'logs');
 app.use(logger({
     logDir: logDir,
     logFileName: 'error.log'
 }));
 
 // server static file
-app.last(staticServer('assets', appDir + '/assets/')); // 13.31
+app.last(staticServer('assets', appDir + '/assets/'));
 
 // bodyparse
-app.use(bodyParser()); // 15.01
+app.use(bodyParser());
 
 // session
-app.use(session()); // 16.53
-
+app.use(session());
 
 // i18n
-app.use(i18n(app, { // 17.78
+app.use(i18n(app, {
     //defaultLocale: 'zh-cn',
     cookie: 'lang',
     locales: ['zh-cn', 'en'],
@@ -53,8 +52,7 @@ app.use(i18n(app, { // 17.78
 }));
 
 //cors Cross-Origin Resource Sharing(CORS) middleware
-app.use(cors()); // 19.06
-
+app.use(cors());
 
 //csrf need session middleware
 app.use(csrf());
@@ -66,7 +64,7 @@ app.use(helmet());
 app.use(favicon(appDir + '/favicon.ico'));
 
 //views template
-app.use(views(appDir + '/app/views', { // 18.22
+app.use(views(appDir + '/app/views', {
     extension: 'tpl',
     map: {
         tpl: 'nunjucks'
@@ -74,21 +72,5 @@ app.use(views(appDir + '/app/views', { // 18.22
 }));
 
 app.use(router());
-
-// app.use(  async (ctx)=>{
-//
-//     ctx.session.user = "tom";
-//     let sess = ctx.session;
-//     //console.log(sess);
-//     //
-//     ctx.log.info(sess);
-//     //
-//     // //ctx.i18n.setLocale('zh-cn');
-//     let a = ctx.i18n.__('app.title');
-//     //
-//     //await ctx.render("home/reg.tpl", {title:a});
-//
-//     ctx.body = a;
-// })
 
 app.listen(7005);

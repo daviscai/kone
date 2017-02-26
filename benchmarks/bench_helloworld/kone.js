@@ -5,8 +5,8 @@
 global.Promise = require('bluebird')
 //}
 
-const Kwan  = require('../../app/core/');
-const app = new Kwan();
+const Kone  = require('../../app/core/');
+const app = new Kone();
 
 let n = parseInt(process.env.MW || '1', 10)
 console.log(`  ${n} middleware`)

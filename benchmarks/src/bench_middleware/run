@@ -12,7 +12,7 @@ elif [ "$2" == "toa" ]; then
   port="3"
 elif [ "$2" == "trek" ]; then
   port="4"
-elif [ "$2" == "kwan" ]; then
+elif [ "$2" == "kone" ]; then
   port="5"
 elif [ "$2" == "node" ]; then
   port="6"

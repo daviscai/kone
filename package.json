@@ -1,7 +1,7 @@
 {
-  "name": "kwan",
-  "version": "0.0.2",
-  "description": "kwan is a framework base on Koa2 for node.js",
+  "name": "kone",
+  "version": "1.0.0",
+  "description": "kone is a framework base on Koa2 for node.js",
   "main": "index.js",
   "scripts": {
     "test": "./node_modules/.bin/nyc  ava --reporter=text-lcov",
@@ -16,14 +16,14 @@
   },
   "keywords": [
     "koa2",
-    "kwan",
+    "kone",
     "node.js framework"
   ],
   "author": "caiwxiong@qq.com",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/daviscai/kwan.git"
+    "url": "https://github.com/daviscai/kone.git"
   },
   "ava": {
     "babel": {

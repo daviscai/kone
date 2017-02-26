@@ -118,7 +118,7 @@ module.exports = class Application extends Emitter {
                     // 需要最后执行的中间件，比如jsonp中间件，在洋葱模型以外再添加一层，这样可以避免使用async/await，目的是为了提高性能
                     // 下面是 autocannon -c 100 -d 5 压测下 Latency (ms) avg
                     //
-                    // const app = new Kwan(); // not any middleware      7.33 ~ 7.96
+                    // const app = new Kone(); // not any middleware      7.33 ~ 7.96
                     // app.use(jsonp());   // middleware use async/await, 9.53 ~ 10.72 | 11.78 ~ 13.17
                     // app.last(jsonp());  // not use async/await,        7.96 ~ 8.51  | 9.9   ~ 10.32
 

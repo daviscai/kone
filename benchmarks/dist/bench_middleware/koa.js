@@ -48,12 +48,12 @@ var logger = log4js.getLogger('http');
 // server static file
 app.use(server("assets", appDir + '/assets'));
 
-app.use(jsonp()); // todo  3ms
+app.use(jsonp());
 
 // for i18n
 locale(app);
 
-// support i18n  // todo 40ms
+// support i18n
 app.use(convert(i18n(app, {
     directory: configDir + '/locales',
     locales: ['zh-cn', 'en'], //  `zh-cn` defualtLocale, must match the locales to the filenames
@@ -68,12 +68,12 @@ app.use(convert(i18n(app, {
 })));
 
 // support session,  csrf need it
-app.use(session()); // todo 3-5ms
+app.use(session());
 
 // support body parser
 app.use(convert(bodyParser()));
 
-// use log4js logger  todo 20-25ms
+// use log4js logger
 // app.use(
 //     log4js.koaLogger(logger, {level: 'auto'})
 // );
@@ -84,7 +84,7 @@ app.use(convert(bodyParser()));
 //     await next();
 // });
 
-// use nunjucks template , todo 50ms
+// use nunjucks template
 app.use(views(appDir + '/app/views', {
     extension: 'tpl',
     map: {
@@ -92,7 +92,7 @@ app.use(views(appDir + '/app/views', {
     }
 }));
 
-// add the CSRF middleware  todo 10ms
+// add the CSRF middleware 
 app.keys = ['secret'];
 app.use(new csrf({
     invalidSessionSecretMessage: 'Invalid session secret',
