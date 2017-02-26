@@ -34,7 +34,13 @@ function logger(opts) {
     let logFileName = opts.logFileName || '';
     let stream = null;
     return function (ctx, next) {
+
         if(logDir && logFileName){
+            try {
+                fs.mkdirSync(logDir);
+            } catch (e) {
+                return next()
+            }
             let logFile = path.join(logDir, logFileName);
             stream = stream ||  fs.createWriteStream(logFile);
             ctx.log = Pino(stream);
@@ -54,7 +60,7 @@ function catchErr(ctx, handler) {
         }
         ctx.log.error({
             res: ctx.res,
-            err: { 
+            err: {
                 type: e.constructor.name,
                 message: e.message,
                 stack: e.stack
