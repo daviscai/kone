@@ -11,7 +11,7 @@
     "build-min": "NODE_ENV=production ./node_modules/.bin/rollup -c rollup.config.js",
     "start-dev": "./node_modules/.bin/nodemon ./index.js",
     "start": "node ./pm2.js",
-    "compile": "./node_modules/.bin/babel --copy-files --ignore config/locales/ src/ --out-dir app/",
+    "compile": "./node_modules/.bin/babel --copy-files src/ --out-dir app/",
     "watch": "./node_modules/.bin/babel --copy-files  src/ --out-dir app/ --watch"
   },
   "keywords": [

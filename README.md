@@ -54,10 +54,9 @@ src为源码目录，需要用babel编译后才能运行，编译后的目录为
 
 详细看 [benchmarks](https://github.com/daviscai/kone/tree/master/benchmarks)
 
-结论：
-1. 未使用模板渲染下，kone比koa快1.6倍，koa默认没有使用 bluebird，如果使用bluebird代替默认的Promise，性能会提升较多，但kone比koa依然快24%   
-
-2. 使用模板渲染下，kone和koa性能差不多，kone在模板渲染方面还有优化空间
+结论：  
+1. 未使用模板渲染下，kone比koa快1.6倍，koa默认没有使用 bluebird，如果使用bluebird代替默认的Promise，性能会提升较多，但kone比koa依然快24%     
+2. 使用模板渲染下，kone和koa性能差不多，kone在模板渲染方面还有优化空间  
 
 
 ## License
