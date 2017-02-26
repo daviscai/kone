@@ -7,7 +7,7 @@ npm run bench
 npm run bench-mw
 ```
 
-#### 性能比较 node native, koa, toa, trek, kwan  
+#### 性能比较 node native, koa, toa, trek, kone  
 use bluebird Promise, see [better performance](https://github.com/koajs/koa/pull/751)
 
 ```
@@ -24,7 +24,7 @@ cpu : 1.4 GHz Intel Core i5
 
 $ npm run bench
 
-> banchmarks@1.0.0 bench /Users/caidavis/Documents/git/kwan/benchmarks
+> banchmarks@1.0.0 bench /Users/caidavis/Documents/git/kone/benchmarks
 > make battle
 
 
@@ -38,7 +38,7 @@ Bytes/Sec    1.5 MB  158.37 kB 1.7 MB
 51k requests in 5s, 7.53 MB read
 
   5 middleware
-------- kwan -------
+------- kone -------
 Hello World
 Stat         Avg     Stdev     Max
 Latency (ms) 7.74    4.25      72
@@ -88,7 +88,7 @@ Bytes/Sec    842.14 kB 38.21 kB 884.74 kB
 20k requests in 5s, 4.19 MB read
 ```
 
-#### kwan vs koa2 with middleware
+#### kone vs koa2 with middleware
 
 $ npm run bench-mw
 
@@ -97,12 +97,12 @@ $ npm run bench-mw
 
 全部常用中间件 ：jsonp,router,logger,staticServer,bodyParser,session,i18n,cors,csrf,helmet,favicon,router，template
 
-#### koa未使用 bluebird， kwan 使用了 bluebird
+#### koa未使用 bluebird， kone 使用了 bluebird
 
-QPS(每秒请求数), kwan 比 koa 大概多2100次
+QPS(每秒请求数), kone 比 koa 大概多2100次
 
 ```
-------- kwan -------
+------- kone -------
 xxx("aaa");
 Stat         Avg     Stdev    Max
 Latency (ms) 28.34   9.53     131
@@ -121,12 +121,12 @@ Bytes/Sec    208.9 kB 8.97 kB 221.18 kB
 7k requests in 5s, 1.05 MB read
 ```
 
-#### koa和kwan 均使用了 bluebird
+#### koa和kone 均使用了 bluebird
 
-QPS(每秒请求数), kwan 比 koa 大概多700次
+QPS(每秒请求数), kone 比 koa 大概多700次
 
 ```
-------- kwan -------
+------- kone -------
 xxx("aaa");
 Stat         Avg       Stdev     Max
 Latency (ms) 30.77     10.84     148
@@ -144,7 +144,7 @@ Bytes/Sec    394.85 kB 69.2 kB 475.13 kB
 
 12k requests in 5s, 1.97 MB read
 
-------- kwan -------
+------- kone -------
 xxx("aaa");
 Stat         Avg     Stdev     Max
 Latency (ms) 28.5    9.51      144
@@ -169,13 +169,13 @@ Bytes/Sec    447.28 kB 58.07 kB 507.9 kB
 
 全部常用中间件 ：jsonp,router,logger,staticServer,bodyParser,session,i18n,cors,csrf,helmet,favicon,router，template
 
-#### koa未使用 bluebird， kwan 使用了 bluebird
+#### koa未使用 bluebird， kone 使用了 bluebird
 
-QPS(每秒请求数), kwan 比 koa 大概多200次
+QPS(每秒请求数), kone 比 koa 大概多200次
 
 ```
-------- kwan -------
-xxx("\n<h2>kwan is a framework base on Koa2 for node.js</h2>\n");
+------- kone -------
+xxx("\n<h2>kone is a framework base on Koa2 for node.js</h2>\n");
 Stat         Avg       Stdev    Max
 Latency (ms) 64.67     19.95    206
 Req/Sec      1526.8    252.85   1800
@@ -193,13 +193,13 @@ Bytes/Sec    220.36 kB 34.99 kB 253.95 kB
 6k requests in 5s, 1.1 MB read
 ```
 
-#### koa和kwan 均使用了 bluebird
+#### koa和kone 均使用了 bluebird
 
-QPS(每秒请求数), kwan 比 koa 大概多100次
+QPS(每秒请求数), kone 比 koa 大概多100次
 
 ```
-------- kwan -------
-xxx("\n<h2>kwan is a framework base on Koa2 for node.js</h2>\n");
+------- kone -------
+xxx("\n<h2>kone is a framework base on Koa2 for node.js</h2>\n");
 Stat         Avg       Stdev    Max
 Latency (ms) 65.56     21.48    208
 Req/Sec      1503      264.29   1717
@@ -216,8 +216,8 @@ Bytes/Sec    246.58 kB 32.09 kB 278.53 kB
 
 7k requests in 5s, 1.23 MB read
 
-------- kwan -------
-xxx("\n<h2>kwan is a framework base on Koa2 for node.js</h2>\n");
+------- kone -------
+xxx("\n<h2>kone is a framework base on Koa2 for node.js</h2>\n");
 Stat         Avg       Stdev    Max
 Latency (ms) 64.57     21.22    221
 Req/Sec      1532.6    228.63   1741
@@ -236,8 +236,8 @@ Bytes/Sec    240.03 kB 41.5 kB 294.91 kB
 ```
 
 结论：
-1. 未使用模板渲染下，kwan比koa快1.6倍，koa默认没有使用 bluebird，如果使用bluebird代替默认的Promise，性能会提升较多，但kwan比koa依然快24%
-2. 使用模板渲染下，kwan和koa性能差不多，kwan在模板渲染方面还有优化空间
+1. 未使用模板渲染下，kone比koa快1.6倍，koa默认没有使用 bluebird，如果使用bluebird代替默认的Promise，性能会提升较多，但kone比koa依然快24%
+2. 使用模板渲染下，kone和koa性能差不多，kone在模板渲染方面还有优化空间
 
 
 ## why 为什么会快这么多
