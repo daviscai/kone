@@ -6,7 +6,7 @@
 
 'use strict'
 
-const fs = require('fs')
+const fs = require('mz/fs')
 const path = require('path')
 const Pino = require('pino')
 
@@ -33,46 +33,48 @@ function logger(opts) {
     let logDir = opts.logDir || '';
     let logFileName = opts.logFileName || '';
     let stream = null;
-    return function (ctx, next) {
+    return async function (ctx, next) {
 
-        fs.stat(logDir, function (err, stats) {
-          if(err && err.code === 'ENOENT'){
-              fs.mkdirSync(logDir);
-          }
-        });
+        try {
+            let stats = await fs.stat(logDir);
+            if(!stats.isDirectory()){
+                await fs.mkdir(logDir);
+            }
+        } catch (err) {
+            if(err.code === 'ENOENT'){
+                await fs.mkdir(logDir);
+            }else{
+                return next()
+            }
+        }
 
-        if(logDir && logFileName){
-            // try {
-            //     fs.mkdirSync(logDir);
-            // } catch (e) {
-            //     return next()
-            // }
+        if(logFileName){
             let logFile = path.join(logDir, logFileName);
             stream = stream ||  fs.createWriteStream(logFile);
             ctx.log = Pino(stream);
         }else{
             ctx.log = Pino(opts);
         }
-        ctx.onerror = catchErr(ctx, ctx.onerror)
+
         return next()
     }
 }
 
-// overriding `onerror` is much faster that using try/catch
-function catchErr(ctx, handler) {
-    return function(e) {
-        if (!e) {
-            return handler(e)
-        }
-        ctx.log.error({
-            res: ctx.res,
-            err: {
-                type: e.constructor.name,
-                message: e.message,
-                stack: e.stack
-            },
-            responseTime: ctx.res.responseTime
-        }, 'request errored')
-        return handler(e)
-    }
-}
+// // overriding `onerror` is much faster that using try/catch
+// function catchErr(ctx, handler) {
+//     return function(e) {
+//         if (!e) {
+//             return handler(e)
+//         }
+//         ctx.log.error({
+//             res: ctx.res,
+//             err: {
+//                 type: e.constructor.name,
+//                 message: e.message,
+//                 stack: e.stack
+//             },
+//             responseTime: ctx.res.responseTime
+//         }, 'request errored')
+//         return handler(e)
+//     }
+// }

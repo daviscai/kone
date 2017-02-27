@@ -13,8 +13,8 @@ const index = async (ctx) => {
 
     await ctx.render("home/reg.tpl", {title:a});
 
-    //ctx.body = 'aaa';
-    //ctx.status = 200;
+    // ctx.body = 'aaa';
+    // ctx.status = 200;
 };
 
 
