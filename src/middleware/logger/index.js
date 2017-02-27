@@ -35,12 +35,18 @@ function logger(opts) {
     let stream = null;
     return function (ctx, next) {
 
+        fs.stat(logDir, function (err, stats) {
+          if(err && err.code === 'ENOENT'){
+              fs.mkdirSync(logDir);
+          }
+        });
+
         if(logDir && logFileName){
-            try {
-                fs.mkdirSync(logDir);
-            } catch (e) {
-                return next()
-            }
+            // try {
+            //     fs.mkdirSync(logDir);
+            // } catch (e) {
+            //     return next()
+            // }
             let logFile = path.join(logDir, logFileName);
             stream = stream ||  fs.createWriteStream(logFile);
             ctx.log = Pino(stream);
