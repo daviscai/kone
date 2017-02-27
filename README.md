@@ -33,6 +33,12 @@ kone (俗称k丸) 是基于[Koa2](http://koajs.com/)和[Trekjs](https://trekjs.c
 
 ## 快速开始
 
+node版本支持6+，对系统的GCC版本要求较高，如果需要升级GCC版本，可以参考
+[Centos6.5升级glibc过程](https://cnodejs.org/topic/56dc21f1502596633dc2c3dc)  
+[CentOS 6.X使用RPM包升级GLIBC](http://blog.ttionya.com/article-1559.html)   
+[CentOS 升级 gcc 和 g++ 的方法](http://www.wengweitao.com/centos-sheng-ji-gcc-he-g-de-fang-fa.html)  
+
+
 安装依赖包：
 ```
 git clone https://github.com/daviscai/kone.git
@@ -50,7 +56,7 @@ yarn
 ```
 npm run compile
 npm run test
-npm run watch 
+npm run watch
 npm run start-dev
 
 http://127.0.0.1:4000
@@ -60,7 +66,6 @@ http://127.0.0.1:4000
 src为源码目录，需要用babel编译后才能运行，编译后的目录为app ，可执行 `npm run watch` 监听src目录下的文件修改自动重新编译到app目录下
 
 执行 `npm run start-dev` 监听 app目录下代码的改动，自动重启node
-
 
 ## Bench
 
