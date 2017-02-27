@@ -32,13 +32,25 @@ kone (俗称k丸) 是基于[Koa2](http://koajs.com/)和[Trekjs](https://trekjs.c
 10. sequelize orm ，数据库
 
 ## 快速开始
+
+安装依赖包：
 ```
 git clone https://github.com/daviscai/kone.git
 export NODE_ENV=development
-npm install -c
+npm install -c  
+```
 
+或者用 [Yarn](https://yarnpkg.com/docs/usage/) 代替NPM：
+```
+npm install -g yarn -c
+yarn
+```
+
+安装完后，编译运行：
+```
 npm run compile
 npm run test
+npm run watch 
 npm run start-dev
 
 http://127.0.0.1:4000

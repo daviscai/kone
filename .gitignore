@@ -44,6 +44,8 @@ $RECYCLE.BIN/
 .AppleDesktop
 .apdisk
 
+*.lock
+
 node_modules
 logs
 .nyc_output
