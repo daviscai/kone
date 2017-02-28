@@ -33,7 +33,7 @@ kone (俗称k丸) 是基于[Koa2](http://koajs.com/)和[Trekjs](https://trekjs.c
 
 ## 快速开始
 
-node版本支持6+，对系统的GCC版本要求较高，如果需要升级GCC版本，可以参考
+node版本支持6+，对系统的GCC版本要求较高，如果需要升级GCC版本，可以参考  
 [Centos6.5升级glibc过程](https://cnodejs.org/topic/56dc21f1502596633dc2c3dc)  
 [CentOS 6.X使用RPM包升级GLIBC](http://blog.ttionya.com/article-1559.html)   
 [CentOS 升级 gcc 和 g++ 的方法](http://www.wengweitao.com/centos-sheng-ji-gcc-he-g-de-fang-fa.html)  
