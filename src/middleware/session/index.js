@@ -61,9 +61,8 @@ module.exports = function(opts = {}) {
     opts.key = opts.key || "kone:sess";
     opts.store = opts.store || new Store();
 
-    return  function(ctx, next) {
+    return async function(ctx, next) {
         let id = ctx.cookies.get(opts.key, opts);
-
         if (!id) {
             ctx.session = {};
         } else {
@@ -74,20 +73,22 @@ module.exports = function(opts = {}) {
             }
         }
 
-        // clear old session if exists
-        if (id) {
-            opts.store.destroy(id);
-            id = null;
-        }
+        let old = JSON.stringify(ctx.session);
+
+        await next();
+
+        // if not changed
+        if(old == JSON.stringify(ctx.session)) return;
 
         // set new session
         if (ctx.session && Object.keys(ctx.session).length) {
             let sid = opts.store.set(ctx.session, Object.assign({}, opts, {
                 sid: id
             }));
-            ctx.cookies.set(opts.key, sid, opts);
-        }
 
-        return next();
+            if(ctx.status/100 === 2){
+                ctx.cookies.set(opts.key, sid, opts);
+            }
+        }
     }
 }
