@@ -143,6 +143,8 @@ module.exports = class Application extends Emitter {
 
     createContext(req, res) {
         const context = new Context(this, req, res);
+        context.request = context.req;
+        context.response = context.res;
 
         context.app = this;
         context.originalUrl = req.url;
@@ -161,7 +163,6 @@ module.exports = class Application extends Emitter {
         context.query = saftQuery;
 
         context.path = Url.parse(req.url, true).pathname;
-
 
         return context;
     }

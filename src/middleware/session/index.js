@@ -63,6 +63,7 @@ module.exports = function(opts = {}) {
 
     return async function(ctx, next) {
         let id = ctx.cookies.get(opts.key, opts);
+
         if (!id) {
             ctx.session = {};
         } else {

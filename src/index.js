@@ -13,7 +13,7 @@ const cors = require('./middleware/cors');
 const csrf = require('./middleware/csrf');
 const helmet = require('./middleware/helmet');
 const favicon = require('./middleware/favicon');
-
+const uploadFile  = require('./middleware/uploadFile');
 
 
 const appDir = path.resolve(__dirname, '..');
@@ -30,24 +30,15 @@ const configDir = path.resolve(__dirname, './config');
 // http only
 const app = new Kone();
 
-app.last(jsonp());
-
-
 const logDir = path.join(appDir, 'logs');
 app.use(logger({
     logDir: logDir,
     logFileName: 'error.log'
 }));
 
-// server static file
-app.last(staticServer('assets',__dirname + '/../assets/'));
 
 // bodyparse
 app.use(bodyParser());
-
-// session
-app.use(session());
-
 
 // i18n
 app.use(i18n(app, {
@@ -57,9 +48,8 @@ app.use(i18n(app, {
     directory: configDir + '/locales'
 }));
 
-
 // views template
-app.use(views(__dirname + '/views', {
+app.use(views(appDir + '/app/views', {
     extension: 'tpl',
     map: {
         tpl: 'nunjucks'
@@ -69,19 +59,30 @@ app.use(views(__dirname + '/views', {
 //cors Cross-Origin Resource Sharing(CORS) middleware
 app.use(cors());
 
-
-//csrf need session middleware
-app.use(csrf());
-
 // header secure,  xss core support
 app.use(helmet());
 
 // favicon
 app.use(favicon(__dirname + '/../favicon.ico'));
 
-// monitor
+// upload file
+app.use(uploadFile({
+    uploadDir : appDir + '/uploads/',
+    maxFileSize  : 2*1024*1024,  // bytes = 2mb default
+    keepExtensions : true // default false
+}));
 
-app.use(router());
+// server static file
+app.last(staticServer('assets',__dirname + '/../assets/'));
 
+app.last(jsonp());
+
+// session
+app.last(session());
+
+//csrf need session middleware, after uploadFile and session middleware
+app.last(csrf());
+
+app.last(router()); 
 
 module.exports = app;

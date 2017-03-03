@@ -31,16 +31,14 @@ function makeCSRF(options = {}) {
     return csrf
 
     async function csrf(ctx, next) {
-
         if (!ctx.session.secret) ctx.session.secret = await tokens.secret()
-
         if (!ctx.store.has(key)) ctx.store.set(key, tokens.create(ctx.session.secret))
 
         if (ignoreMethods.includes(ctx.req.method)) return next()
 
+        await next();
+
         const bodyToken = (ctx.req.body && typeof ctx.req.body._csrf === 'string') ? ctx.req.body._csrf : false;
-
-
         const token = bodyToken
             || (ctx.query && ctx.query._csrf)
             || ctx.req.get('csrf-token')
@@ -48,11 +46,9 @@ function makeCSRF(options = {}) {
             || ctx.req.get('x-csrf-token')
             || ctx.req.get('x-xsrf-token');
 
-
         if (!token) return ctx.res.send(403, 'Invalid CSRF token')
 
         if (!tokens.verify(ctx.session.secret, token)) return ctx.res.send(403, 'Invalid CSRF token')
 
-        return next()
     }
 }
