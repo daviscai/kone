@@ -85,7 +85,7 @@ app.use(views(appDir + '/app/views', {
     }
 }));
 
-// add the CSRF middleware 
+// add the CSRF middleware
 app.keys = ['secret'];
 app.use(new csrf({
     invalidSessionSecretMessage: 'Invalid session secret',
