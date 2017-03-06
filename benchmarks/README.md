@@ -241,7 +241,7 @@ Bytes/Sec    240.03 kB 41.5 kB 294.91 kB
 
 
 ## why 为什么会快这么多
-1. 基于 koa2 application.js 核心功能，简化上下文，采用trekjs的request和response，去掉了delegate代理模块
+1. 基于 koa2 application.js 核心功能，简化上下文，去掉了delegate代理模块
 2. 中间件合并处理compose改用迭代器 iterator，不用递归调用的方式
 3. Promise采用性能更快的bluebird，性能提升显著
 4. 在洋葱模型之外添加一层最后处理中间层，避免部分中间件采用async/await方式处理，async/await对性能有一定影响。

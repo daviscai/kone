@@ -14,6 +14,7 @@ const csrf = require('./middleware/csrf');
 const helmet = require('./middleware/helmet');
 const favicon = require('./middleware/favicon');
 const uploadFile  = require('./middleware/uploadFile');
+const redis  = require('./middleware/ioredis');
 
 
 const appDir = path.resolve(__dirname, '..');
@@ -62,6 +63,9 @@ app.use(cors());
 // header secure,  xss core support
 app.use(helmet());
 
+// redis
+app.use(redis(configDir + '/redis.js'));
+
 // favicon
 app.use(favicon(__dirname + '/../favicon.ico'));
 
@@ -83,6 +87,6 @@ app.last(session());
 //csrf need session middleware, after uploadFile and session middleware
 app.last(csrf());
 
-app.last(router()); 
+app.last(router());
 
 module.exports = app;
