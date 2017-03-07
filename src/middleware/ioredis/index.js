@@ -22,6 +22,7 @@ module.exports = (opts) => {
     }
 
     let redis = null;
+    let isConnected = false;
 
     // Cluster
     if(config['redis'].length>1){
@@ -35,10 +36,18 @@ module.exports = (opts) => {
         redis.on('error', (err) =>{
             console.log("Redis connection error", err);
         });
+        redis.on('connect', () =>{
+            isConnected = true
+        });
     }
 
     return async (ctx, next) => {
-        ctx.redis = redis
-        await next();
+        if(!isConnected){
+            //连接失败，返回下一个中间件，redis挂了不影响业务
+            return next();
+        }else{
+            ctx.redis = redis
+            await next();
+        }
     }
 }
