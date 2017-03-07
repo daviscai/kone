@@ -23,27 +23,22 @@ module.exports = (opts) => {
 
     let redis = null;
 
-    return async (ctx, next) => {
-        ctx.redis = false;
-
-        // Cluster
-        if(config['redis'].length>1){
-            redis = new Redis.Cluster(config['redis']);
-        }else if(config['redis'].length == 1 ){
-            redis = new Redis(config['redis'][0]);
-        }else{
-            console.log("Redis config not found ");
-            return ;
-        }
-
+    // Cluster
+    if(config['redis'].length>1){
+        redis = new Redis.Cluster(config['redis']);
+    }else if(config['redis'].length == 1 ){
+        redis = new Redis(config['redis'][0]);
+    }else{
+        console.log("Redis config not found ");
+    }
+    if(redis){
         redis.on('error', (err) =>{
             console.log("Redis connection error", err);
-            return ;
         });
-        redis.on('connect', ()=>{
-            ctx.redis = redis;
-        });
+    }
 
+    return async (ctx, next) => {
+        ctx.redis = redis
         await next();
     }
 }
