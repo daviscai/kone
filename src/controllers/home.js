@@ -1,4 +1,5 @@
 //import models from '../models/index';
+const Cat = require('../models/cat');
 
 const index = async (ctx) => {
     ctx.session.user = "tom3";
@@ -46,6 +47,22 @@ const testRedis = async (ctx)=>{
     ctx.status = 200;
 };
 
+const testMongo = async (ctx)=>{
+
+    let catModel = Cat.create(ctx.mongo);
+    var kitty = new catModel({ name: 'Zildjian', friends: ['tom', 'jerry']});
+    kitty.age = 5;
+
+    kitty.save().then( (doc)=>{
+        //console.log(doc)
+    });
+
+    let query = await catModel.findOne({name: "Zildjian"}).exec();
+    //console.log(query);
+
+    ctx.status = 200;
+};
+
 const testDB = async ()=>{
     //let rs = await models.User.findById('111');
     //console.log(rs);
@@ -68,6 +85,7 @@ export default {
     testI18n,
     testLogger,
     testRedis,
+    testMongo,
     testDB,
     testTemplate,
     testAntd,

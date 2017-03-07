@@ -15,6 +15,7 @@ const helmet = require('./middleware/helmet');
 const favicon = require('./middleware/favicon');
 const uploadFile  = require('./middleware/uploadFile');
 const redis  = require('./middleware/ioredis');
+const mongo  = require('./middleware/mongo');
 
 
 const appDir = path.resolve(__dirname, '..');
@@ -65,6 +66,9 @@ app.use(helmet());
 
 // redis
 app.use(redis(configDir + '/redis.js'));
+
+// mongodb
+app.use(mongo());
 
 // favicon
 app.use(favicon(__dirname + '/../favicon.ico'));
