@@ -65,7 +65,7 @@ app.use(cors());
 app.use(helmet());
 
 // redis
-app.use(redis(configDir + '/redis.js'));
+//app.use(redis(configDir + '/redis.js'));
 
 // mongodb
 app.use(mongo());

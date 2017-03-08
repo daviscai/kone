@@ -1,6 +1,6 @@
 module.exports = {
     model : false,
-    create : function(mongoose){
+    make : function(mongoose){
         if(this.model){
             // fixed Cannot overwrite model once compiled Mongoose
             return this.model;
@@ -12,7 +12,7 @@ module.exports = {
             age: Number,
             _enabled:Boolean
         });
-        
+
         this.model = model;
         return this.model;
     }

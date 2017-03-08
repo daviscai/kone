@@ -48,18 +48,20 @@ const testRedis = async (ctx)=>{
 };
 
 const testMongo = async (ctx)=>{
+    if(ctx.mongo){
+        let catModel = Cat.make(ctx.mongo);
+        var kitty = new catModel({ name: 'Zildjian', friends: ['tom', 'jerry']});
+        kitty.age = 5;
 
-    let catModel = Cat.create(ctx.mongo);
-    var kitty = new catModel({ name: 'Zildjian', friends: ['tom', 'jerry']});
-    kitty.age = 5;
+        kitty.save().then( (doc)=>{
+            //console.log(doc)
+        });
 
-    kitty.save().then( (doc)=>{
-        //console.log(doc)
-    });
+        let query = await catModel.findOne({name: "Zildjian"}).exec();
+        //console.log(query);
 
-    let query = await catModel.findOne({name: "Zildjian"}).exec();
-    //console.log(query);
-
+        ctx.body = query;
+    }
     ctx.status = 200;
 };
 
