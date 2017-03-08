@@ -5,11 +5,12 @@ const database = {
         database: 'test',
         host: 'localhost',
         port: 3306,
-        dialect: 'mysql',
+        dialect: 'mysql', // dialect: 'mysql'|'mariadb'|'sqlite'|'postgres'|'mssql',
+        logging: false,
         pool: {
             max: 10,
             min: 0,
-            idle: 1000
+            idle: 10000 //If any connection was not used for 10000ms pool will release it
         }
     },
     test: {
@@ -22,7 +23,7 @@ const database = {
         pool: {
             max: 10,
             min: 0,
-            idle: 1000
+            idle: 10000
         }
     },
     production: {
@@ -35,7 +36,7 @@ const database = {
         pool: {
             max: 10,
             min: 0,
-            idle: 1000
+            idle: 10000
         }
     }
 };

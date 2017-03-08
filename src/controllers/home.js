@@ -1,4 +1,5 @@
 //import models from '../models/index';
+const User = require('../models/user');
 const Cat = require('../models/cat');
 
 const index = async (ctx) => {
@@ -65,9 +66,11 @@ const testMongo = async (ctx)=>{
     ctx.status = 200;
 };
 
-const testDB = async ()=>{
-    //let rs = await models.User.findById('111');
-    //console.log(rs);
+const testDB = async (ctx)=>{
+    let userModel = User.make(ctx.db);
+
+    let rs = await userModel.findById('111');
+    ctx.status = 200;
 };
 
 const testTemplate = async (ctx)=>{

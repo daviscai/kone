@@ -34,7 +34,7 @@ module.exports = (opts) => {
     }
     if(redis){
         redis.on('error', (err) =>{
-            console.log("Redis connection error", err);
+            //console.log("Redis connection error", err);
         });
         redis.on('connect', () =>{
             isConnected = true

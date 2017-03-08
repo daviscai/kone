@@ -6,7 +6,7 @@ module.exports = {
             return this.model;
         }
 
-        let model = mongoose.model('Cat', {
+        const model = mongoose.model('Cat', {
             name: String,
             friends: [String],
             age: Number,
