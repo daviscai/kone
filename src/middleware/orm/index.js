@@ -25,12 +25,8 @@ module.exports = (options) => {
     if(config){
         dbcfg = config[env];
         //记录日志
-        if(dbcfg.logging){
-            dbcfg.logging = function(){
-                if(typeof options.logging === 'function' ){
-                    options.logging.apply(this, arguments);
-                }
-            }
+        if(dbcfg.logging && typeof options.logging === 'function' ){
+            dbcfg.logging = options.logging ;
         }
         sequelize = new Sequelize(dbcfg.database, dbcfg.username, dbcfg.password, dbcfg)
     }else{
