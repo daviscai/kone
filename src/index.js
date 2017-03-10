@@ -35,8 +35,7 @@ const app = new Kone();
 
 const logDir = path.join(appDir, 'logs');
 app.use(logger({
-    logDir: logDir,
-    logFileName: 'error.log'
+    logDir: logDir
 }));
 
 

@@ -6,7 +6,7 @@ const index = async (ctx) => {
     ctx.session.user = "tom3";
     let sess = ctx.session;
 
-    ctx.log.info('abc');
+    //ctx.log.info('abc');
 
     let a = ctx.i18n.__('app.title');
 
@@ -26,16 +26,13 @@ const testI18n = (ctx)=>{
 };
 
 
-const testLogger = (ctx)=>{
-    /*
-    ctx.log.trace('this is trace');
-    ctx.log.debug('this is debug');
-    ctx.log.info('this is info');
-    ctx.log.warn('this is warn');
-    ctx.log.error('this is error');
-    ctx.log.fatal('this is fatal');
-    */
-    ctx.log.debug('this is debug');
+const testLogger = async (ctx)=>{
+
+    ctx.log.info('this is infoss');
+    // ctx.log.warn('this is warn');
+    // ctx.log.error('this is error');
+    // ctx.log.fatal('this is fatal');
+
     ctx.status = 200;
 };
 
