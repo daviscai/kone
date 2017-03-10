@@ -9,6 +9,7 @@
 const fs = require('mz/fs')
 const path = require('path')
 const Log4js = require('log4js')
+const util = require('util');
 
 module.exports = logger
 
@@ -41,6 +42,7 @@ function logger(opts) {
 const log = {
 
     debug : function(name, msg){
+
         Log4js.getLogger(name).debug(msg);
     },
 
@@ -60,6 +62,8 @@ const log = {
         Log4js.getLogger(name).fatal(msg);
     }
 }
+
+
 
 //
 // function wrap(pino, logDir) {

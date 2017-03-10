@@ -29,7 +29,7 @@ const testI18n = (ctx)=>{
 const testLogger = async (ctx)=>{
     ctx.log.debug('api','this is infoss');
     ctx.log.info('api','this is infoss');
-    ctx.log.warn('api','this is warn'); 
+    ctx.log.warn('api',ctx); 
     // ctx.log.error('app','this is error');
     // ctx.log.fatal('app','this is fatal');
 
