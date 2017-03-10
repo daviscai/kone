@@ -27,11 +27,11 @@ const testI18n = (ctx)=>{
 
 
 const testLogger = async (ctx)=>{
-
-    ctx.log.info('this is infoss');
-    // ctx.log.warn('this is warn');
-    // ctx.log.error('this is error');
-    // ctx.log.fatal('this is fatal');
+    ctx.log.debug('api','this is infoss');
+    ctx.log.info('api','this is infoss');
+    ctx.log.warn('api','this is warn'); 
+    // ctx.log.error('app','this is error');
+    // ctx.log.fatal('app','this is fatal');
 
     ctx.status = 200;
 };

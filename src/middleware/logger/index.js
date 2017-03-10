@@ -8,54 +8,59 @@
 
 const fs = require('mz/fs')
 const path = require('path')
-const Pino = require('pino')
+const Log4js = require('log4js')
 
 module.exports = logger
 
 const defaulfOptions = {
-    safe: true,
-    name: '',
-    serializers: {},
-    // serializers: {
-    //     req: Pino.stdSerializers.req,
-    //     res: Pino.stdSerializers.res
-    // },
-    timestamp: true,
-    slowtime: false,
-    extreme: false, // cannot enable pretty print in extreme mode
-    prettyPrint: true,
-    enabled: true,
-    logDir: '',
+    configFile : '', //日志配置文件
 };
 
 function logger(opts) {
     opts = Object.assign({}, defaulfOptions, opts);
-    let logDir = opts.logDir || '';
 
-    fs.mkdir(logDir).then(function() {
+    const configDir = path.resolve(__dirname, '../../config');
+    let configFile = opts.configFile || path.join(configDir, 'log4js.js');
+    let configFileObject = require(configFile);
 
-    }).catch(() => {
-
-    });
+    // fs.mkdir(logDir).then(function() {
+    //
+    // }).catch(() => {
+    //
+    // });
 
     return function(ctx, next) {
 
-        if (logDir) {
-            // let newPino = wrap(pino, logDir);
-            // ctx.log = newPino;
+        Log4js.configure(configFileObject);
 
-            let logFile = path.join(logDir, 'info.log');
-            let stream = fs.createWriteStream(logFile);
-            let pino = Pino(opts, stream);
-            ctx.log = pino;
-        } else {
-            let pino = Pino(opts);
-            ctx.log = pino;
-        }
-
+        ctx.log = log;
         return next()
     }
 }
+
+const log = {
+
+    debug : function(name, msg){
+        Log4js.getLogger(name).debug(msg);
+    },
+
+    info : function(name, msg){
+        Log4js.getLogger(name).info(msg);
+    },
+
+    warn : function(name, msg){
+        Log4js.getLogger(name).warn(msg);
+    },
+
+    error : function(name, msg){
+        Log4js.getLogger(name).error(msg);
+    },
+
+    fatal : function(name, msg){
+        Log4js.getLogger(name).fatal(msg);
+    }
+}
+
 //
 // function wrap(pino, logDir) {
 //     let methods = ['info', 'warn', 'error', 'fatal'];

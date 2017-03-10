@@ -34,11 +34,8 @@ const configDir = path.resolve(__dirname, './config');
 const app = new Kone();
 
 const logDir = path.join(appDir, 'logs');
-app.use(logger({
-    logDir: logDir
-}));
-
-
+app.use(logger());
+ 
 // bodyparse
 app.use(bodyParser());
 
