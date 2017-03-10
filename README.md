@@ -57,7 +57,7 @@ yarn
 npm run compile
 npm run test
 npm run watch
-npm run start-dev
+npm run dev
 
 http://127.0.0.1:4000
 ```
@@ -65,7 +65,7 @@ http://127.0.0.1:4000
 
 src为源码目录，需要用babel编译后才能运行，编译后的目录为app ，可执行 `npm run watch` 监听src目录下的文件修改自动重新编译到app目录下
 
-执行 `npm run start-dev` 监听 app目录下代码的改动，自动重启node
+执行 `npm run dev` 监听 app目录下代码的改动，自动重启node
 
 ## Bench
 
