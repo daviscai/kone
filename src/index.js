@@ -33,9 +33,7 @@ const configDir = path.resolve(__dirname, './config');
 // http only
 const app = new Kone();
 
-const logDir = path.join(appDir, 'logs');
-app.use(logger());
- 
+
 // bodyparse
 app.use(bodyParser());
 
@@ -70,7 +68,7 @@ app.use(mongo());
 // db
 app.use(db());
 
-// favicon
+//favicon
 app.use(favicon(__dirname + '/../favicon.ico'));
 
 // upload file
@@ -90,6 +88,8 @@ app.last(session());
 
 //csrf need session middleware, after uploadFile and session middleware
 app.last(csrf());
+
+app.use(logger());
 
 app.last(router());
 

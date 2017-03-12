@@ -11,6 +11,7 @@ router.get('/home/testRedis', Home.testRedis);
 router.get('/home/testMongo', Home.testMongo);
 router.get('/home/testDB', Home.testDB);
 router.get('/home/testLogger', Home.testLogger);
+router.get('/home/testAll', Home.testAll);
 
 
 router.post('/upload',  Upload.upload);

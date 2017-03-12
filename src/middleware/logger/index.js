@@ -1,6 +1,6 @@
 /*!
  * index.js
- * Created by Davis Cai on 2017/02/11
+ * Created by Davis Cai on 2017/03/12
  * Copyright (c) 2017 Davis Cai, caiwxiong@qq.com
  */
 
@@ -8,75 +8,163 @@
 
 const fs = require('mz/fs')
 const path = require('path')
-const Log4js = require('log4js')
-const util = require('util');
+const stringifySafe = require('fast-safe-stringify')
+const os = require('os')
+
 
 module.exports = logger
 
+
 const defaulfOptions = {
-    configFile : '', //日志配置文件
+    logPath: path.resolve(__dirname, '../../../logs'), //日志配置文件
 };
 
+
+/**
+ * ctx.log = Log({
+ *  logPath = '',
+ *  pattern : '{"datetime":"%datetime","level":"%level","hostname":"%hostname","pid":"%pid","msg":"%msg"}',
+ * });
+ * ctx.log.error(msg, filename);
+ */
 function logger(opts) {
     opts = Object.assign({}, defaulfOptions, opts);
-
-    const configDir = path.resolve(__dirname, '../../config');
-    let configFile = opts.configFile || path.join(configDir, 'log4js.js');
-    let configFileObject = require(configFile);
-
-    // fs.mkdir(logDir).then(function() {
-    //
-    // }).catch(() => {
-    //
-    // });
+    let log = new Log({
+        logPath: opts.logPath
+    });
 
     return function(ctx, next) {
-
-        Log4js.configure(configFileObject);
-
         ctx.log = log;
         return next()
     }
 }
 
-const log = {
 
-    debug : function(name, msg){
+export class Log {
+    constructor(opts) {
 
-        Log4js.getLogger(name).debug(msg);
-    },
+        this.cache = false;
+        this.logPath = opts.logPath || '';
+        this.stringify = stringifySafe || JSON.stringify;
+        this.pattern = '{"datetime":"%datetime","level":"%level","hostname":"%hostname","pid":"%pid","msg":"%msg"}';
+        this.cache = {
+            size: 4096,
+            buf: ''
+        }
 
-    info : function(name, msg){
-        Log4js.getLogger(name).info(msg);
-    },
+        fs.mkdir(this.logPath).then(function() {
 
-    warn : function(name, msg){
-        Log4js.getLogger(name).warn(msg);
-    },
+        }).catch(() => {
 
-    error : function(name, msg){
-        Log4js.getLogger(name).error(msg);
-    },
+        });
+    }
 
-    fatal : function(name, msg){
-        Log4js.getLogger(name).fatal(msg);
+    hostname() {
+        return os.hostname().toString();
+    }
+
+    pid() {
+        return process.pid;
+    }
+
+    datetime(){
+        let d = new Date();
+        let month = d.getMonth() + 1;
+        month = month < 10 ? '0'+month : month;
+
+        let date = d.getDate() < 10 ? '0'+d.getDate() : d.getDate();
+        let hours = d.getHours() < 10 ? '0'+d.getHours() : d.getHours();
+        let minutes = d.getMinutes() < 10 ? '0'+d.getMinutes() : d.getMinutes();
+        let seconds = d.getSeconds() < 10 ? '0'+d.getSeconds() : d.getSeconds();
+
+        return d.getFullYear()+'/'+month+'/'+date+' '+hours+':'+minutes+':'+seconds;
+    }
+
+    toJson(obj) {
+        let msg = '';
+
+        if (obj instanceof Error && obj.stack) {
+            msg = ',"type":"Error","stack":' + this.stringify(obj.stack)
+        } else if (typeof obj === 'object') {
+            msg = this.stringify(obj);
+        } else {
+            msg = obj;
+        }
+        return msg;
+    }
+
+    replace(message, level){
+        return  this.pattern.replace(/%datetime/g, this.datetime())
+        .replace(/%level/g, level)
+        .replace(/%hostname/g, this.hostname())
+        .replace(/%pid/g, this.pid())
+        .replace(/%msg/g, message);
+    }
+
+    write(msg, filename, callback) {
+        let logFile = path.join(this.logPath, filename);
+
+        fs.appendFile(logFile, msg + "\n", 'utf8', callback);
+
+        // let buf = new BufferStore();
+        // buf.set(msg + "\n");
+        // // this.cache.buf += message
+        // //
+        // let curBufferString = buf.get();
+        // console.log(curBufferString.length);
+        // if (curBufferString.length >= this.cache.size) {
+        //     fs.appendFile(logFile, curBufferString, 'utf8', callback);
+        //     buf.destroy();
+        // }
+    }
+
+
+    info(msg, filename, callback) {
+        let logFileName = filename ? 'info_' + filename + '.log' : 'info.log';
+        let message = this.toJson(msg);
+        let str = this.replace(message, 'INFO');
+        this.write(str, logFileName, callback);
+    }
+
+    warn(msg, filename, callback) {
+        let logFileName = filename ? 'warn_' + filename + '.log' : 'warn.log';
+        let message = this.toJson(msg);
+        let str = this.replace(message, 'WARN');
+        this.write(str, logFileName, callback);
+    }
+
+    error(msg, filename, callback) {
+        let logFileName = filename ? 'error_' + filename + '.log' : 'error.log';
+        let message = this.toJson(msg);
+        let str = this.replace(message, 'ERROR');
+        this.write(str, logFileName, callback);
     }
 }
 
-
-
 //
-// function wrap(pino, logDir) {
-//     let methods = ['info', 'warn', 'error', 'fatal'];
-//     for (let n of methods) {
-//         let fn = pino[n];
-//         pino[n] = function() {
-//             let logFile = path.join(logDir, n + '.log');
-//             let stream = fs.createWriteStream(logFile);
-//             pino.stream = stream;
-//             fn.apply(this, arguments);
-//         }
+// export class BufferStore {
+//     constructor() {
+//         this.buff = new Buffer(4096);
 //     }
 //
-//     return pino;
+//     getID() {
+//         return os.hostname().toString()+'_'+process.pid;
+//     }
+//
+//     get() {
+//         return this.buff.toString();
+//     }
+//
+//     set(message) {
+//
+//         //sid = this.getID();
+//         this.buff.write(message);
+//
+//         //return sid;
+//     }
+//
+//     destroy() {
+//         this.buff = null;
+//         //delete this.session[sid];
+//     }
 // }
