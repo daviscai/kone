@@ -9,36 +9,36 @@
 const helmet = require('helmet')
 
 const promisifyMiddleware = function(middleware) {
-    return function(req, res) {
-        return new Promise(function(resolve, reject) {
-            middleware(req, res, function(err) {
-                if (err) {
-                    return reject(err)
-                }
+  return function(req, res) {
+    return new Promise(function(resolve, reject) {
+      middleware(req, res, function(err) {
+        if (err) {
+          return reject(err)
+        }
 
-                return resolve()
-            })
-        })
-    }
+        return resolve()
+      })
+    })
+  }
 }
 
 const makeHelmet = function() {
-    const helmetPromise = promisifyMiddleware(helmet.apply(null, arguments))
+  const helmetPromise = promisifyMiddleware(helmet.apply(null, arguments))
 
-    return (ctx, next) => {
-        return helmetPromise(ctx.req.raw, ctx.res.raw).then(next)
-    }
+  return (ctx, next) => {
+    return helmetPromise(ctx.req.raw, ctx.res.raw).then(next)
+  }
 }
 
 Object.keys(helmet).forEach(function(helmetMethod) {
-    makeHelmet[helmetMethod] = function() {
-        const method = helmet[helmetMethod]
-        const methodPromise = promisifyMiddleware(method.apply(null, arguments))
+  makeHelmet[helmetMethod] = function() {
+    const method = helmet[helmetMethod]
+    const methodPromise = promisifyMiddleware(method.apply(null, arguments))
 
-        return (ctx, next) => {
-            return methodPromise(ctx.req.raw, ctx.res.raw).then(next)
-        }
+    return (ctx, next) => {
+      return methodPromise(ctx.req.raw, ctx.res.raw).then(next)
     }
+  }
 })
 
 module.exports = makeHelmet

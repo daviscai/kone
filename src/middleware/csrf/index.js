@@ -11,44 +11,44 @@ module.exports = makeCSRF
 const Tokens = require('csrf')
 
 const defaults = {
-    key: 'csrf',
-    ignoreMethods: ['GET', 'HEAD', 'OPTIONS', 'TRACE'],
-    // https://github.com/pillarjs/csrf#new-tokensoptions
-    tokenOptions: undefined
+  key: 'csrf',
+  ignoreMethods: ['GET', 'HEAD', 'OPTIONS', 'TRACE'],
+  // https://github.com/pillarjs/csrf#new-tokensoptions
+  tokenOptions: undefined
 }
 
 function makeCSRF(options = {}) {
-    options = Object.assign({}, defaults, options)
+  options = Object.assign({}, defaults, options)
 
-    const {
-        key,
-        ignoreMethods,
-        tokenOptions
-    } = options
+  const {
+    key,
+    ignoreMethods,
+    tokenOptions
+  } = options
 
-    const tokens = new Tokens(tokenOptions)
+  const tokens = new Tokens(tokenOptions)
 
-    return csrf
+  return csrf
 
-    async function csrf(ctx, next) {
-        if (!ctx.session.secret) ctx.session.secret = await tokens.secret()
-        if (!ctx.store.has(key)) ctx.store.set(key, tokens.create(ctx.session.secret))
+  async function csrf(ctx, next) {
+    if (!ctx.session.secret) ctx.session.secret = await tokens.secret()
+    if (!ctx.store.has(key)) ctx.store.set(key, tokens.create(ctx.session.secret))
 
-        if (ignoreMethods.includes(ctx.req.method)) return next()
+    if (ignoreMethods.includes(ctx.req.method)) return next()
 
-        await next();
+    await next();
 
-        const bodyToken = (ctx.req.body && typeof ctx.req.body._csrf === 'string') ? ctx.req.body._csrf : false;
-        const token = bodyToken
-            || (ctx.query && ctx.query._csrf)
-            || ctx.req.get('csrf-token')
-            || ctx.req.get('xsrf-token')
-            || ctx.req.get('x-csrf-token')
-            || ctx.req.get('x-xsrf-token');
+    const bodyToken = (ctx.req.body && typeof ctx.req.body._csrf === 'string') ? ctx.req.body._csrf : false;
+    const token = bodyToken ||
+      (ctx.query && ctx.query._csrf) ||
+      ctx.req.get('csrf-token') ||
+      ctx.req.get('xsrf-token') ||
+      ctx.req.get('x-csrf-token') ||
+      ctx.req.get('x-xsrf-token');
 
-        if (!token) return ctx.res.send(403, 'Invalid CSRF token')
+    if (!token) return ctx.res.send(403, 'Invalid CSRF token')
 
-        if (!tokens.verify(ctx.session.secret, token)) return ctx.res.send(403, 'Invalid CSRF token')
+    if (!tokens.verify(ctx.session.secret, token)) return ctx.res.send(403, 'Invalid CSRF token')
 
-    }
+  }
 }

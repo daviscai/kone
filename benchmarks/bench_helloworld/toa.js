@@ -15,11 +15,11 @@ let n = parseInt(process.env.MW || '1', 10)
 console.log(`  ${n} middleware`)
 
 while (n--) {
-    app.use(function*() {})
+  app.use(function*() {})
 }
 
 app.use(function() {
-    this.body = 'Hello World'
+  this.body = 'Hello World'
 })
 
 app.listen(7003)

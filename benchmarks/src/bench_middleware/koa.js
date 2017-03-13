@@ -5,7 +5,7 @@
 //global.Promise = require('bluebird')
 //}
 
-const path  = require('path');
+const path = require('path');
 const Koa = require('koa');
 const Router = require('koa-router');
 const views = require('koa-views');
@@ -31,8 +31,8 @@ const configDir = benchDir + '/config';
 const logDir = path.join(appDir, 'logs');
 
 log4js.configure(path.join(configDir, 'log4js.json'), {
-    cwd: logDir,
-    reloadSecs: 1
+  cwd: logDir,
+  reloadSecs: 1
 });
 const logger = log4js.getLogger('http');
 
@@ -46,16 +46,16 @@ locale(app);
 
 // support i18n
 app.use(convert(i18n(app, {
-    directory: configDir + '/locales',
-    locales: ['zh-cn', 'en'], //  `zh-cn` defualtLocale, must match the locales to the filenames
-    modes: [ //  If one mode is detected, no continue to detect.
-        'query', //  optional detect querystring - `/?locale=en`
-        'subdomain', //  optional detect subdomain   - `zh-CN.koajs.com`
-        'cookie', //  optional detect cookie      - `Cookie: locale=zh-cn`
-        'header', //  optional detect header      - `Accept-Language: zh-CN,zh;q=0.5`
-        'url', //  optional detect url         - `/en`
-        'tld' //  optional detect tld(the last domain) - `koajs.cn`
-    ]
+  directory: configDir + '/locales',
+  locales: ['zh-cn', 'en'], //  `zh-cn` defualtLocale, must match the locales to the filenames
+  modes: [ //  If one mode is detected, no continue to detect.
+    'query', //  optional detect querystring - `/?locale=en`
+    'subdomain', //  optional detect subdomain   - `zh-CN.koajs.com`
+    'cookie', //  optional detect cookie      - `Cookie: locale=zh-cn`
+    'header', //  optional detect header      - `Accept-Language: zh-CN,zh;q=0.5`
+    'url', //  optional detect url         - `/en`
+    'tld' //  optional detect tld(the last domain) - `koajs.cn`
+  ]
 })));
 
 
@@ -79,27 +79,29 @@ app.use(convert(bodyParser()));
 
 // use nunjucks template
 app.use(views(appDir + '/app/views', {
-    extension: 'tpl',
-    map: {
-        tpl: 'nunjucks'
-    }
+  extension: 'tpl',
+  map: {
+    tpl: 'nunjucks'
+  }
 }));
 
 // add the CSRF middleware
 app.keys = ['secret'];
 app.use(new csrf({
-    invalidSessionSecretMessage: 'Invalid session secret',
-    invalidSessionSecretStatusCode: 403,
-    invalidTokenMessage: 'Invalid CSRF token',
-    invalidTokenStatusCode: 403
+  invalidSessionSecretMessage: 'Invalid session secret',
+  invalidSessionSecretStatusCode: 403,
+  invalidTokenMessage: 'Invalid CSRF token',
+  invalidTokenStatusCode: 403
 }));
 
-router.get('/', async function (ctx, next) {
-    //logger.error('index do some awesome things');
+router.get('/', async function(ctx, next) {
+  //logger.error('index do some awesome things');
 
-    //ctx.body = 'hello';
-    //ctx.status = 200;
-    await ctx.render("home/reg.tpl", {title:'aaa'});
+  //ctx.body = 'hello';
+  //ctx.status = 200;
+  await ctx.render("home/reg.tpl", {
+    title: 'aaa'
+  });
 });
 
 // use koa-router router

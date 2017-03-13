@@ -12,10 +12,10 @@ const cors = require('./middleware/cors');
 const csrf = require('./middleware/csrf');
 const helmet = require('./middleware/helmet');
 const favicon = require('./middleware/favicon');
-const uploadFile  = require('./middleware/uploadFile');
-const redis  = require('./middleware/ioredis');
-const mongo  = require('./middleware/mongo');
-const db  = require('./middleware/orm');
+const uploadFile = require('./middleware/uploadFile');
+const redis = require('./middleware/ioredis');
+const mongo = require('./middleware/mongo');
+const db = require('./middleware/orm');
 
 
 const appDir = path.resolve(__dirname, '..');
@@ -38,18 +38,18 @@ app.use(bodyParser());
 
 // i18n
 app.use(i18n(app, {
-    //defaultLocale: 'zh-cn',
-    cookie: 'lang',
-    locales:['zh-cn', 'en'],
-    directory: configDir + '/locales'
+  //defaultLocale: 'zh-cn',
+  cookie: 'lang',
+  locales: ['zh-cn', 'en'],
+  directory: configDir + '/locales'
 }));
 
 // views template
 app.use(views(appDir + '/app/views', {
-    extension: 'tpl',
-    map: {
-        tpl: 'nunjucks'
-    }
+  extension: 'tpl',
+  map: {
+    tpl: 'nunjucks'
+  }
 }));
 
 //cors Cross-Origin Resource Sharing(CORS) middleware
@@ -72,13 +72,13 @@ app.use(favicon(__dirname + '/../favicon.ico'));
 
 // upload file
 app.use(uploadFile({
-    uploadDir : appDir + '/uploads/',
-    maxFileSize  : 2*1024*1024,  // bytes = 2mb default
-    keepExtensions : true // default false
+  uploadDir: appDir + '/uploads/',
+  maxFileSize: 2 * 1024 * 1024, // bytes = 2mb default
+  keepExtensions: true // default false
 }));
 
 // server static file
-app.last(staticServer('assets',__dirname + '/../assets/'));
+app.last(staticServer('assets', __dirname + '/../assets/'));
 
 app.last(jsonp());
 

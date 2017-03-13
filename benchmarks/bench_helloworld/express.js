@@ -15,7 +15,7 @@ let n = parseInt(process.env.MW || '1', 10)
 console.log(`  ${n} middleware`)
 
 while (n--) {
-    app.use((req, res, next) => next())
+  app.use((req, res, next) => next())
 }
 
 const body = new Buffer('Hello World')

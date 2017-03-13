@@ -20,7 +20,7 @@ module.exports = {
   FLAG_STREAM
 }
 
-function getFlag (body) {
+function getFlag(body) {
   if (!body) return FLAG_STRING
   if (Buffer.isBuffer(body)) return FLAG_BUFFER
   if (body instanceof Stream) return FLAG_STREAM
@@ -28,14 +28,14 @@ function getFlag (body) {
   return FLAG_STRING
 }
 
-function getLength (body, flag = FLAG_STRING) {
+function getLength(body, flag = FLAG_STRING) {
   if (!body) return
   if (FLAG_STRING === flag) return Buffer.byteLength(body)
   if (FLAG_OBJECT === flag) return Buffer.byteLength(JSON.stringify(body))
   if (FLAG_BUFFER === flag) return body.length
 }
 
-function send (res, body = null, flag = FLAG_STRING, onError = () => {}) {
+function send(res, body = null, flag = FLAG_STRING, onError = () => {}) {
   // body: null
   if (null === body) return res.end()
 
@@ -67,7 +67,12 @@ function send (res, body = null, flag = FLAG_STRING, onError = () => {}) {
   res.end(body)
 }
 
-function sendError (res, { status, message, stack, expose }, DEV) {
+function sendError(res, {
+  status,
+  message,
+  stack,
+  expose
+}, DEV) {
   if (res.headersSent || !writable(res)) return
 
   // ignore body
@@ -92,7 +97,7 @@ function sendError (res, { status, message, stack, expose }, DEV) {
   res.end(message)
 }
 
-function writable (res) {
+function writable(res) {
   // can't write any more after response finished
   if (res.finished || res.responded) return false
 

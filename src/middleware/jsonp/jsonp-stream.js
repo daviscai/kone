@@ -9,51 +9,51 @@
 const Transform = require('stream').Transform
 
 module.exports = class JSONPStream extends Transform {
-    constructor(options) {
-        super({
-            objectMode: true
-        })
+  constructor(options) {
+    super({
+      objectMode: true
+    })
 
-        options = options || {}
-        this.startChunk = options.startChunk || ''
-        this.endChunk = options.endChunk || ''
-        this.destroyed = false
-        this.started = false
+    options = options || {}
+    this.startChunk = options.startChunk || ''
+    this.endChunk = options.endChunk || ''
+    this.destroyed = false
+    this.started = false
+  }
+
+  _transform(data, encoding, callback) {
+    if (this.destroyed) return
+
+    if (!this.started) {
+      this.started = true
+      this.push(this.startChunk)
     }
 
-    _transform(data, encoding, callback) {
-        if (this.destroyed) return
+    /* TODO */
+    // JSON parse vs eval fix. https://github.com/rack/rack-contrib/pull/37
+    // data = data.replace(/\u2028/g, '\\u2028').replace(/\u2029/g, '\\u2029')
+    this.push(data)
 
-        if (!this.started) {
-            this.started = true
-            this.push(this.startChunk)
-        }
+    process.nextTick(callback)
+  }
 
-        /* TODO */
-        // JSON parse vs eval fix. https://github.com/rack/rack-contrib/pull/37
-        // data = data.replace(/\u2028/g, '\\u2028').replace(/\u2029/g, '\\u2029')
-        this.push(data)
+  _flush(callback) {
+    if (this.destroyed) return
 
-        process.nextTick(callback)
+    if (!this.started) {
+      this.push(this.start)
     }
 
-    _flush(callback) {
-        if (this.destroyed) return
+    this.push(this.endChunk)
+    this.push(null)
 
-        if (!this.started) {
-            this.push(this.start)
-        }
+    process.nextTick(callback)
+  }
 
-        this.push(this.endChunk)
-        this.push(null)
-
-        process.nextTick(callback)
+  destroy() {
+    if (!this.destroyed) {
+      this.emit('close')
+      this.destroyed = true
     }
-
-    destroy() {
-        if (!this.destroyed) {
-            this.emit('close')
-            this.destroyed = true
-        }
-    }
+  }
 }

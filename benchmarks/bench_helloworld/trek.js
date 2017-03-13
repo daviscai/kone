@@ -15,16 +15,16 @@ let n = parseInt(process.env.MW || '1', 10)
 console.log(`  ${n} middleware`)
 
 while (n--) {
-    app.use((ctx, next) => next())
+  app.use((ctx, next) => next())
 }
 
 const body = new Buffer('Hello World')
 
 app.use(({
-    res
+  res
 }, next) => next().then(() => {
-    res.status = 200
-    res.body = body
+  res.status = 200
+  res.body = body
 }))
 
 app.run(7004)

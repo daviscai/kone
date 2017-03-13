@@ -14,16 +14,18 @@ function uploadFile(opts) {
   return async (ctx, next)=> {
 
     if(!ctx.req.get('Content-Type').includes('multipart/form-data')) return next();
-    try {
-        let stats = await fs.stat(form.uploadDir);
-        if(!stats.isDirectory()){
-            await fs.mkdir(form.uploadDir);
-        }
-    } catch (err) {
-        if(err.code === 'ENOENT'){
-            await fs.mkdir(form.uploadDir);
-        }
-    }
+
+    fs.mkdir(form.uploadDir).then(function() {}).catch((err) => {});
+    // try {
+    //     let stats = await fs.stat(form.uploadDir);
+    //     if(!stats.isDirectory()){
+    //         await fs.mkdir(form.uploadDir);
+    //     }
+    // } catch (err) {
+    //     if(err.code === 'ENOENT'){
+    //         await fs.mkdir(form.uploadDir);
+    //     }
+    // }
 
     await form.parse(ctx.req.raw, function(err, fields, files) {
       if (err) throw err

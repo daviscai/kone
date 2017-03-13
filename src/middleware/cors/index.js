@@ -10,10 +10,10 @@
 module.exports = makeCors
 
 const defaults = {
-    credentials: false,
-    origins: '*',
-    methods: 'GET,HEAD,PUT,POST,DELETE,PATCH',
-    maxAge: 0
+  credentials: false,
+  origins: '*',
+  methods: 'GET,HEAD,PUT,POST,DELETE,PATCH',
+  maxAge: 0
 }
 
 const ORIGIN = 'Origin'
@@ -28,68 +28,78 @@ const ACCESS_CONTROL_REQUEST_METHOD = 'Access-Control-Request-Method'
 const ACCESS_CONTROL_REQUEST_HEADERS = 'Access-Control-Request-Headers'
 
 function makeCors(options = {}) {
-    options = Object.assign({}, defaults, options)
+  options = Object.assign({}, defaults, options)
 
-    let {credentials,origins,methods,maxAge,headers,exposeHeaders} = options
+  let {
+    credentials,
+    origins,
+    methods,
+    maxAge,
+    headers,
+    exposeHeaders
+  } = options
 
-    credentials = Boolean(credentials)
+  credentials = Boolean(credentials)
 
-    if (Array.isArray(origins)) {
-        origins = origins.join(',')
+  if (Array.isArray(origins)) {
+    origins = origins.join(',')
+  }
+
+  if (Array.isArray(methods)) {
+    methods = methods.join(',')
+  }
+
+  if (Array.isArray(headers)) {
+    headers = headers.join(',')
+  }
+
+  if (Array.isArray(exposeHeaders)) {
+    exposeHeaders = exposeHeaders.join(',')
+  }
+
+  return cors
+
+  function cors({
+    req,
+    res
+  }, next) {
+    const origin = 'origin' in req.headers
+
+    // Simple request
+    if ('OPTIONS' !== req.method) {
+      res.vary(ORIGIN)
+
+      if (!origin || !origins) return next()
+
+      res.set(ACCESS_CONTROL_ALLOW_ORIGIN, origins)
+
+      if (credentials) res.set(ACCESS_CONTROL_ALLOW_CREDENTIALS, 'true')
+
+      if (exposeHeaders) res.set(ACCESS_CONTROL_EXPOSE_HEADERS, exposeHeaders)
+
+      return next()
     }
 
-    if (Array.isArray(methods)) {
-        methods = methods.join(',')
-    }
+    // Preflight request
+    // Always set Vary headers
+    res.vary(ORIGIN)
+    res.vary(ACCESS_CONTROL_REQUEST_METHOD)
+    res.vary(ACCESS_CONTROL_REQUEST_HEADERS)
 
-    if (Array.isArray(headers)) {
-        headers = headers.join(',')
-    }
+    if (!origin || !origins) return next()
 
-    if (Array.isArray(exposeHeaders)) {
-        exposeHeaders = exposeHeaders.join(',')
-    }
+    res.set(ACCESS_CONTROL_ALLOW_ORIGIN, origins)
 
-    return cors
+    if (methods) res.set(ACCESS_CONTROL_ALLOW_METHODS, methods)
 
-    function cors({req,res}, next) {
-        const origin = 'origin' in req.headers
+    if (credentials) res.set(ACCESS_CONTROL_ALLOW_CREDENTIALS, 'true')
 
-        // Simple request
-        if ('OPTIONS' !== req.method) {
-            res.vary(ORIGIN)
+    if (maxAge > 0) res.set(ACCESS_CONTROL_MAX_AGE, maxAge)
 
-            if (!origin || !origins) return next()
+    if (!headers) headers = req.get(ACCESS_CONTROL_REQUEST_HEADERS)
 
-            res.set(ACCESS_CONTROL_ALLOW_ORIGIN, origins)
+    if (headers) res.set(ACCESS_CONTROL_ALLOW_HEADERS, headers)
 
-            if (credentials) res.set(ACCESS_CONTROL_ALLOW_CREDENTIALS, 'true')
-
-            if (exposeHeaders) res.set(ACCESS_CONTROL_EXPOSE_HEADERS, exposeHeaders)
-
-            return next()
-        }
-
-        // Preflight request
-        // Always set Vary headers
-        res.vary(ORIGIN)
-        res.vary(ACCESS_CONTROL_REQUEST_METHOD)
-        res.vary(ACCESS_CONTROL_REQUEST_HEADERS)
-
-        if (!origin || !origins) return next()
-
-        res.set(ACCESS_CONTROL_ALLOW_ORIGIN, origins)
-
-        if (methods) res.set(ACCESS_CONTROL_ALLOW_METHODS, methods)
-
-        if (credentials) res.set(ACCESS_CONTROL_ALLOW_CREDENTIALS, 'true')
-
-        if (maxAge > 0) res.set(ACCESS_CONTROL_MAX_AGE, maxAge)
-
-        if (!headers) headers = req.get(ACCESS_CONTROL_REQUEST_HEADERS)
-
-        if (headers) res.set(ACCESS_CONTROL_ALLOW_HEADERS, headers)
-
-        return res.send(204)
-    }
+    return res.send(204)
+  }
 }
