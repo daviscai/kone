@@ -20,7 +20,7 @@ const defaulfOptions = {
 /**
  * ctx.log = Logger({
  *  logPath = '',
- *  pattern : '{"datetime":"%datetime","level":"%level","hostname":"%hostname","pid":"%pid","msg":"%msg"}',
+ *  pattern : '{"datetime":"%datetime","level":"%level","hostname":"%hostname","pid":"%pid","reqUrl":"%reqUrl","status":"%status","msg":"%msg"}'
  * });
  * ctx.log.error(msg, filename);
  */
@@ -32,11 +32,11 @@ module.exports = class Logger {
         this.cache = false;
         this.logPath = opts.logPath || '';
         this.stringify = stringifySafe || JSON.stringify;
-        this.pattern = '{"datetime":"%datetime","level":"%level","hostname":"%hostname","pid":"%pid","msg":"%msg"}';
-        this.cache = {
-            size: 4096,
-            buf: ''
-        }
+        this.pattern = '{"datetime":"%datetime","level":"%level","hostname":"%hostname","pid":"%pid","reqUrl":"%reqUrl","status":"%status","msg":"%msg"}';
+        // this.cache = {
+        //     size: 4096,
+        //     buf: ''
+        // }
 
         fs.mkdir(this.logPath).then(function() {
 
@@ -66,25 +66,25 @@ module.exports = class Logger {
         return d.getFullYear()+'/'+month+'/'+date+' '+hours+':'+minutes+':'+seconds;
     }
 
-    toJson(obj) {
-        let msg = '';
-
-        if (obj instanceof Error && obj.stack) {
-            msg = ',"type":"Error","stack":' + this.stringify(obj.stack)
-        } else if (typeof obj === 'object') {
-            msg = this.stringify(obj);
-        } else {
-            msg = obj;
-        }
-        return msg;
-    }
-
     replace(message, level){
+        let msg = '', status = '', reqUrl = '' ;
+        if (message instanceof Error ) {
+            status = message.status || '';
+            reqUrl = message.reqUrl || '';
+            msg = message.stack ;
+        }else if (typeof message === 'object') {
+            msg = this.stringify(message);
+        } else {
+            msg = message;
+        }
+
         return  this.pattern.replace(/%datetime/g, this.datetime())
         .replace(/%level/g, level)
         .replace(/%hostname/g, this.hostname())
         .replace(/%pid/g, this.pid())
-        .replace(/%msg/g, message);
+        .replace(/%reqUrl/g, reqUrl)
+        .replace(/%status/g, status)
+        .replace(/%msg/g, msg);
     }
 
     write(msg, filename, callback) {
@@ -106,22 +106,22 @@ module.exports = class Logger {
 
     info(msg, filename, callback) {
         let logFileName = filename ? 'info_' + filename + '.log' : 'info.log';
-        let message = this.toJson(msg);
-        let str = this.replace(message, 'INFO');
+        //let message = this.toJson(msg);
+        let str = this.replace(msg, 'INFO');
         this.write(str, logFileName, callback);
     }
 
     warn(msg, filename, callback) {
         let logFileName = filename ? 'warn_' + filename + '.log' : 'warn.log';
-        let message = this.toJson(msg);
-        let str = this.replace(message, 'WARN');
+        //let message = this.toJson(msg);
+        let str = this.replace(msg, 'WARN');
         this.write(str, logFileName, callback);
     }
 
     error(msg, filename, callback) {
         let logFileName = filename ? 'error_' + filename + '.log' : 'error.log';
-        let message = this.toJson(msg);
-        let str = this.replace(message, 'ERROR');
+        //let message = this.toJson(msg);
+        let str = this.replace(msg, 'ERROR');
         this.write(str, logFileName, callback);
     }
 }

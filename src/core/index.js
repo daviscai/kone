@@ -18,7 +18,7 @@ const defaulfOptions = {
     logPath: path.resolve(__dirname, '../../logs'), //日志目录
 };
 
-module.exports = class Application extends Emitter { 
+module.exports = class Application extends Emitter {
 
     /**
      * Initialize a new `Application`.
@@ -118,13 +118,13 @@ module.exports = class Application extends Emitter {
         //             this.respond(ctx);
         //         }
         //     }catch(err){
-        //         this.onerror(res, err);
+        //         this.onerror(req, res, err);
         //     }
         // }
 
         return (req, res) => {
             const ctx = this.createContext(req, res);
-            const onerror = err => this.onerror(res, err);
+            const onerror = err => this.onerror(req, res, err);
             fn(ctx).then(() => {
                 if(this.lastMiddleware){
                     // 需要最后执行的中间件，比如jsonp中间件，在洋葱模型以外再添加一层，这样可以避免使用async/await，目的是为了提高性能
@@ -188,7 +188,7 @@ module.exports = class Application extends Emitter {
      * @api private
      */
 
-    onerror(res, err) {
+    onerror(req, res, err) {
 
         // don't do anything if there is no error.
         // this allows you to pass `this.onerror`
@@ -214,7 +214,8 @@ module.exports = class Application extends Emitter {
         const errStack = err.stack || err.toString();
 
         // logging
-        this.logger.error(errStack, 'sys');
+        err.reqUrl = req.originalUrl;
+        this.logger.error(err, 'sys');
 
         // respond
         const code = statuses[err.status];
