@@ -48,6 +48,7 @@ const testAll = async (ctx) => {
 
 
 const index = async (ctx) => {
+
     ctx.session.user = "tom3";
     let sess = ctx.session;
 
@@ -57,7 +58,7 @@ const index = async (ctx) => {
 
     ctx.store.get('csrf');
 
-    //await ctx.render("home/reg.tpl", {title:a});
+    await ctx.render("home/reg.tpl", {title:a});
 
     // ctx.body = 'aaa';
     // ctx.status = 200;
@@ -72,14 +73,13 @@ const testI18n = (ctx)=>{
 
 
 const testLogger = (ctx)=>{
+    throw new Error('test error handler');
+
     let j = {username:'aaaaaaaa',blog:'sssssssssssss',age:20,text:"aaaaaaaaaaaaaaaaaaaaaa"};
     ctx.log.error(j,'abc');
     //ctx.log.warn(j,'abc');
     //ctx.log.info('this is infoss');
-    //ctx.log.warn('api',ctx);
-    // ctx.log.error('app','this is error');
-    // ctx.log.fatal('app','this is fatal');
-
+    
     ctx.status = 200;
 };
 

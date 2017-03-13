@@ -3,7 +3,6 @@ const path = require('path');
 const Kone = require('./core/');
 const jsonp = require('./middleware/jsonp');
 const router = require('./middleware/router');
-const logger = require('./middleware/logger');
 const staticServer = require('./middleware/static');
 const bodyParser = require('trek-body-parser');
 const session = require('./middleware/session');
@@ -88,8 +87,6 @@ app.last(session());
 
 //csrf need session middleware, after uploadFile and session middleware
 app.last(csrf());
-
-app.use(logger());
 
 app.last(router());
 

@@ -12,39 +12,22 @@ const stringifySafe = require('fast-safe-stringify')
 const os = require('os')
 
 
-module.exports = logger
-
-
 const defaulfOptions = {
     logPath: path.resolve(__dirname, '../../../logs'), //日志配置文件
 };
 
 
 /**
- * ctx.log = Log({
+ * ctx.log = Logger({
  *  logPath = '',
  *  pattern : '{"datetime":"%datetime","level":"%level","hostname":"%hostname","pid":"%pid","msg":"%msg"}',
  * });
  * ctx.log.error(msg, filename);
  */
-function logger(opts) {
-    opts = Object.assign({}, defaulfOptions, opts);
-    let log = new Log({
-        logPath: opts.logPath
-    });
 
-
-    return function(ctx, next) {
-        //fs.mkdir(this.logPath+'/aaa');
-
-        ctx.log = log;
-        return next()
-    }
-}
-
-
-export class Log {
+module.exports = class Logger {
     constructor(opts) {
+        opts = Object.assign({}, defaulfOptions, opts);
 
         this.cache = false;
         this.logPath = opts.logPath || '';
@@ -106,7 +89,6 @@ export class Log {
 
     write(msg, filename, callback) {
         let logFile = path.join(this.logPath, filename);
-
         fs.appendFile(logFile, msg + "\n", 'utf8', callback);
 
         // let buf = new BufferStore();

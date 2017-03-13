@@ -1,6 +1,7 @@
 'use strict';
 
 global.Promise = require('bluebird')
+const path = require('path')
 const statuses = require('statuses');
 const http = require('http');
 const http2 = require('http2');
@@ -10,9 +11,14 @@ const Cookies = require('cookies');
 const Url = require('url');
 const compose = require('./compose');
 const Context = require('./context');
+const Logger = require('./logger');
 const xssFilters = require('xss-filters');
 
-module.exports = class Application extends Emitter {
+const defaulfOptions = {
+    logPath: path.resolve(__dirname, '../../logs'), //日志目录
+};
+
+module.exports = class Application extends Emitter { 
 
     /**
      * Initialize a new `Application`.
@@ -23,6 +29,9 @@ module.exports = class Application extends Emitter {
     constructor(options) {
         super();
 
+
+        options = Object.assign({}, defaulfOptions, options);
+
         //this.proxy = false;
         this.middleware = [];
         this.lastMiddleware = [];
@@ -32,10 +41,11 @@ module.exports = class Application extends Emitter {
         this.request = {};
         this.response = {};
         this.options = options || {};
+        this.logConfig = {
+            logPath: options.logPath
+        };
 
-        //this.context = new Context(this, req, res);
-        // this.request = Object.create(request);
-        // this.response = Object.create(response);
+        this.logger = new Logger(this.logConfig);
     }
 
     /**
@@ -92,6 +102,8 @@ module.exports = class Application extends Emitter {
     callback() {
         //洋葱模型下的中间件
         const fn = compose(this.middleware);
+
+        if (!this.listeners('error').length) this.on('error', this.onerror);
 
         // async/await 性能较差
         // return async (req, res)=>{
@@ -162,6 +174,8 @@ module.exports = class Application extends Emitter {
         }
         context.query = saftQuery;
 
+        context.log = this.logger;
+
         context.path = Url.parse(req.url, true).pathname;
 
         return context;
@@ -175,12 +189,15 @@ module.exports = class Application extends Emitter {
      */
 
     onerror(res, err) {
+
         // don't do anything if there is no error.
         // this allows you to pass `this.onerror`
         // to node-style callbacks.
         if (null == err) return;
 
         if (!(err instanceof Error)) err = new Error(`non-error thrown: ${err}`);
+
+
 
         // unset all headers, and set those specified
         res._headers = {};
@@ -194,11 +211,14 @@ module.exports = class Application extends Emitter {
         // default to 500
         if ('number' != typeof err.status || !statuses[err.status]) err.status = 500;
 
-        const errmsg = err.stack || err.toString();
-        console.log(errmsg);
+        const errStack = err.stack || err.toString();
+
+        // logging
+        this.logger.error(errStack, 'sys');
+
         // respond
         const code = statuses[err.status];
-        const msg = err.expose ? err.message : code;
+        const msg = err.message ? err.message : code;
         res.status = err.status;
         res.length = Buffer.byteLength(msg);
         res.end(msg);
