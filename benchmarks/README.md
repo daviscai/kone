@@ -235,6 +235,21 @@ Bytes/Sec    240.03 kB 41.5 kB 294.91 kB
 7k requests in 5s, 1.2 MB read
 ```
 
+kone 全业务开启下的压测，结果不理想，需要优化，目标是150ms以下
+
+```
+$ ./node_modules/.bin/autocannon -c 100 -d 5 http://127.0.0.1:4000/home/testAll
+Running 5s test @ http://127.0.0.1:4000/home/testAll
+100 connections
+
+Stat         Avg       Stdev    Max
+Latency (ms) 313.89    114.43   736
+Req/Sec      300       109.55   400
+Bytes/Sec    107.93 kB 39.26 kB 147.46 kB
+
+2k requests in 5s, 541.5 kB read
+```
+
 结论：
 1. 未使用模板渲染下，kone比koa快1.6倍，koa默认没有使用 bluebird，如果使用bluebird代替默认的Promise，性能会提升较多，但kone比koa依然快24%
 2. 使用模板渲染下，kone和koa性能差不多，kone在模板渲染方面还有优化空间

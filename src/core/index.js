@@ -221,8 +221,8 @@ module.exports = class Application extends Emitter {
     this.logger.error(err, 'sys');
 
     // respond
-    const code = Statuses[err.status];
-    const msg = err.message ? err.message : code;
+    //const code = Statuses[err.status];
+    const msg = process.env.NODE_ENV === 'production' ? err.message : err.message + "\n" + errStack ;
     res.status = err.status;
     res.length = Buffer.byteLength(msg);
     res.end(msg);

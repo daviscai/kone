@@ -3,3 +3,4 @@ src/config/locales/*
 app/*
 rollup_iife.config.js
 rollup.config.js
+*/node_modules/*

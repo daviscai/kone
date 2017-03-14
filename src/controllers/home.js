@@ -9,8 +9,6 @@ const testAll = async(ctx) => {
   let sess = ctx.session;
   //console.log('session:'+sess);
 
-  ctx.log.info('abcddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd');
-
   let a = ctx.i18n.__('app.title');
   //console.log('title:'+a);
 
@@ -45,12 +43,14 @@ const testAll = async(ctx) => {
   let rs = await userModel.findById('111');
   //console.log('mysql:'+rs);
 
-  await ctx.render("home/reg.tpl", {
-    title: a
-  });
+  // await ctx.render("home/reg.tpl", {
+  //   title: 'aaa'
+  // });
 
-  //ctx.body = 'aaa';
-  //ctx.status = 200;
+  // ctx.log.info('abcddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd');
+
+  ctx.body = 'aaa';
+  ctx.status = 200;
 };
 
 
@@ -59,7 +59,7 @@ const index = async(ctx) => {
   ctx.session.user = "tom3";
   let sess = ctx.session;
 
-  //ctx.log.info('abc');
+  ctx.log.info('abc');
 
   let a = ctx.i18n.__('app.title');
 
@@ -68,9 +68,7 @@ const index = async(ctx) => {
   await ctx.render("home/reg.tpl", {
     title: a
   });
-
-  // ctx.body = 'aaa';
-  // ctx.status = 200;
+  
 };
 
 

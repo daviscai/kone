@@ -27,6 +27,7 @@ function viewsMiddleware(path, {
   return function views(ctx, next) {
     if (ctx.render) return next()
 
+
     ctx.render = function(relPath, locals = {}) {
       const suffix = (extname(relPath) || '.' + extension).slice(1)
 
@@ -42,9 +43,8 @@ function viewsMiddleware(path, {
               root: path
             })
           } else {
-            const engineName = map && map[suffix] ?
-              map[suffix] :
-              suffix
+
+            const engineName = map && map[suffix] ? map[suffix] : suffix
 
             const render = engineSource[engineName]
 
@@ -52,10 +52,10 @@ function viewsMiddleware(path, {
               `Engine not found for the ".${extension}" file extension`
             ))
 
-            return render(resolve(paths.abs, paths.rel), state)
-              .then((html) => {
-                ctx.body = html
-              })
+            return render(resolve(paths.abs, paths.rel), state).then((html) => {
+              ctx.body = html
+            })
+
           }
         })
     }
@@ -66,30 +66,25 @@ function viewsMiddleware(path, {
 
 function getPaths(abs, rel, ext) {
   return stat(join(abs, rel)).then((stats) => {
-      if (stats.isDirectory()) {
-        // a directory
-        return {
-          rel: join(rel, toFile('index', ext)),
-          abs: join(abs, dirname(rel), rel)
-        }
-      }
-
-      // a file
+    if (stats.isDirectory()) {
+      // a directory
       return {
-        rel,
-        abs
+        rel: join(rel, toFile('index', ext)),
+        abs: join(abs, dirname(rel), rel)
       }
-    })
-    .catch((e) => {
-      // not a valid file/directory
-      if (!extname(rel)) {
-        // Template file has been provided without extension
-        // so append to it to try another lookup
-        return getPaths(abs, `${rel}.${ext}`, ext)
-      }
+    }
+    // a file
+    return {rel,abs}
+  }).catch((e) => {
+    // not a valid file/directory
+    if (!extname(rel)) {
+      // Template file has been provided without extension
+      // so append to it to try another lookup
+      return getPaths(abs, `${rel}.${ext}`, ext)
+    }
 
-      throw e
-    })
+    throw e
+  })
 }
 
 function isHtml(ext) {
