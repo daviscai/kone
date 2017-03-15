@@ -16,8 +16,8 @@ const index = async(ctx) => {
 const upload = async(ctx) => {
 
   // 取post 数据
-  //console.log(ctx.req.body);
-  //console.log(ctx.req.files);
+  // console.log(ctx.req.body); 
+  // console.log(ctx.req.files);
 
   ctx.body = 'aaaa';
   ctx.status = 200;
@@ -27,6 +27,7 @@ const upload = async(ctx) => {
 
 const client = async(ctx) => {
   let csrf = ctx.store.get('csrf');
+
   await ctx.render('home/upload.tpl', {
     csrf: csrf
   });

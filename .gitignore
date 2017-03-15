@@ -54,3 +54,4 @@ coverage.lcov
 *.log
 app
 assets/js/dist/*
+.*.json

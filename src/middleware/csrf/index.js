@@ -20,17 +20,14 @@ const defaults = {
 function makeCSRF(options = {}) {
   options = Object.assign({}, defaults, options)
 
-  const {
-    key,
-    ignoreMethods,
-    tokenOptions
-  } = options
+  const {key, ignoreMethods, tokenOptions} = options
 
   const tokens = new Tokens(tokenOptions)
 
   return csrf
 
   async function csrf(ctx, next) {
+
     if (!ctx.session.secret) ctx.session.secret = await tokens.secret()
     if (!ctx.store.has(key)) ctx.store.set(key, tokens.create(ctx.session.secret))
 

@@ -55,20 +55,24 @@ const testAll = async(ctx) => {
 
 
 const index = async(ctx) => {
+  ctx.session.count = ctx.session.count || 0
+  ctx.session.count++
 
-  ctx.session.user = "tom3";
-  let sess = ctx.session;
+  ctx.session.user = "tom"+ctx.session.count;
+  let sess = ctx.session ;
 
-  ctx.log.info('abc');
+  ctx.body = sess;
+  ctx.status = 200;
+  // ctx.log.info('abc');
+  //
+  // let a = ctx.i18n.__('app.title');
+  //
+  // ctx.store.get('csrf');
+  //
+  // await ctx.render("home/reg.tpl", {
+  //   title: a
+  // });
 
-  let a = ctx.i18n.__('app.title');
-
-  ctx.store.get('csrf');
-
-  await ctx.render("home/reg.tpl", {
-    title: a
-  });
-  
 };
 
 

@@ -1,77 +1,125 @@
 /*!
- * index.js base on koa-session2
+ * index.js base on https://github.com/longztian/koa-session-minimal
  * Created by Davis Cai on 2017/02/16
  * Copyright (c) 2017 Davis Cai, caiwxiong@qq.com
  */
-
+ 
 'use strict'
 
-export class Store extends Map {
+const uid = require('uid-safe')
+const deepEqual = require('deep-equal')
 
-  get (sid) {
-    const sess = super.get(sid)
-    if (!sess) return
+const ONE_DAY = 24 * 3600 * 1000 // one day in milliseconds
 
-    const expires = sess.cookie.expires
-    if (expires && expires <= Date.now()) {
-      this.delete(sid)
-      return
-    }
-
-    return sess
-  }
-
-  set (sid, sess, expires) {
-    super.set(sid, sess)
-    // should clear old timer
-    if (sess.__timer__) {
-      sess.cookie.expires = new Date() + expires
-      clearTimeout(sess.__timer__)
-    }
-    Object.defineProperty(sess, '__timer__', {
-      configurable: true,
-      enumerable: false,
-      writable: true,
-      value: setTimeout(() => this.delete(sid), expires)
-    })
-  }
-
+const cookieOpt = (cookie) => {
+  const options = Object.assign({
+    maxAge: 0, // default to use session cookie
+    path: '/',
+    httpOnly: true,
+  }, cookie || {}, {
+    overwrite: true, // overwrite previous session cookie changes
+    signed: false, // disable signed option
+  })
+  if (!(options.maxAge >= 0)) options.maxAge = 0
+  return options
 }
 
-module.exports = function(opts = {}) {
-  opts.key = opts.key || "kone:sess";
-  let store = opts.store || new Store();
+module.exports = (options) => {
+  const opt = options || {}
+  const key = opt.key || 'kone:sess'
+  const store = opt.store || new MemoryStore()
+  const cookie = opt.cookie instanceof Function ? opt.cookie : cookieOpt(opt.cookie)
 
+  return async (ctx, next) => {
+    // initialize session id and data
+    const cookieSid = ctx.cookies.get(key)
 
-  return async function(ctx, next) {
-    ctx.session = {};
-    let id = ctx.cookies.get(opts.key, opts);
-    if(id){
-      ctx.session = store.get(id);
-      //check session should be a no-null object
-      if (typeof ctx.session !== "object" ||  ctx.session == null) {
-        ctx.session = {};
-      }
+    let sid = cookieSid
+    if (!sid) {
+      sid = uid.sync(24)
+      ctx.session = {}
+    } else {
+      ctx.session = await store.get(`${key}:${sid}`)
+      cleanSession(ctx)
     }
 
+    const sessionClone = JSON.parse(JSON.stringify(ctx.session))
 
-    let old = JSON.stringify(ctx.session);
-
-    await next();
-
-    // if not changed
-    if (old == JSON.stringify(ctx.session)) return;
-
-    // set new session
-    if (ctx.session && Object.keys(ctx.session).length) {
-      let sid = store.set(ctx.session, Object.assign({}, opts, {
-        sid: id
-      }));
-
-      if (ctx.status / 100 === 2) {
-        ctx.cookies.set(opts.key, sid, opts);
-      }
+    // expose session handler to ctx
+    ctx.sessionHandler = {
+      regenerateId: () => {
+        sid = uid.sync(24)
+      },
     }
 
+    await next()
+
+    cleanSession(ctx)
+    const sessionHasData = Object.keys(ctx.session).length > 0
+
+    if (sid !== cookieSid) { // a new session id
+      // delete old session
+      if (cookieSid) deleteSession(ctx, key, cookie, store, cookieSid)
+
+      // save new session
+      saveSession(ctx, key, cookie, store, sid)
+    } else { // an existing session
+      // session data has not been changed
+      if (deepEqual(ctx.session, sessionClone)) return
+
+      // update / delete session
+      const doSession = sessionHasData ? saveSession : deleteSession
+      doSession(ctx, key, cookie, store, sid)
+    }
+  }
+}
+
+const deleteSession = (ctx, key, cookie, store, sid) => {
+  const options = cookie instanceof Function ? cookieOpt(cookie(ctx)) : Object.assign({}, cookie)
+  delete options.maxAge
+  ctx.cookies.set(key, null, options)
+  store.destroy(`${key}:${sid}`)
+}
+
+const saveSession = (ctx, key, cookie, store, sid) => {
+  const options = cookie instanceof Function ? cookieOpt(cookie(ctx)) : cookie
+  const ttl = options.maxAge > 0 ? options.maxAge : ONE_DAY
+  ctx.cookies.set(key, sid, options)
+  console.log(ctx.session);
+  store.set(`${key}:${sid}`, ctx.session, ttl)
+}
+
+const cleanSession = (ctx) => {
+  if (!ctx.session || typeof ctx.session !== 'object') ctx.session = {}
+}
+
+
+export class MemoryStore {
+  constructor() {
+    this.sessions = {} // data
+    this.timeouts = {} // expiration handler
+  }
+
+  get(sid) {
+    return this.sessions[sid]
+  }
+
+  set(sid, val, ttl) {
+    this.sessions[sid] = val
+
+    if (sid in this.timeouts) clearTimeout(this.timeouts[sid])
+    this.timeouts[sid] = setTimeout(() => {
+      delete this.sessions[sid]
+      delete this.timeouts[sid]
+    }, ttl)
+  }
+
+  destroy(sid) {
+    if (sid in this.timeouts) {
+      delete this.sessions[sid]
+
+      clearTimeout(this.timeouts[sid])
+      delete this.timeouts[sid]
+    }
   }
 }
