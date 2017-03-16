@@ -3,7 +3,7 @@
  * Created by Davis Cai on 2017/02/16
  * Copyright (c) 2017 Davis Cai, caiwxiong@qq.com
  */
- 
+
 'use strict'
 
 const uid = require('uid-safe')
@@ -85,7 +85,6 @@ const saveSession = (ctx, key, cookie, store, sid) => {
   const options = cookie instanceof Function ? cookieOpt(cookie(ctx)) : cookie
   const ttl = options.maxAge > 0 ? options.maxAge : ONE_DAY
   ctx.cookies.set(key, sid, options)
-  console.log(ctx.session);
   store.set(`${key}:${sid}`, ctx.session, ttl)
 }
 
