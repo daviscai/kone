@@ -1,3 +1,9 @@
+/*!
+ * index.js fork https://github.com/trekjs/body-parser
+ * Created by Davis Cai on 2017/03/17
+ * Copyright (c) 2017 Davis Cai, caiwxiong@qq.com
+ */
+
 'use strict'
 
 module.exports = bodyParser
