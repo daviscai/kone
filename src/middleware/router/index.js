@@ -6,26 +6,6 @@
 
 'use strict'
 
-// const path = require('path');
-// const configDir = path.resolve(__dirname, '../../config');
-//
-// module.exports = function router(options) {
-//   options = options || {};
-//   let routerConfigDir = options.routerConfigDir || configDir;
-//   let routerFile = options.routerFile || 'router.js';
-//
-//   return function(ctx) {
-//     let router = require(path.join(routerConfigDir, routerFile));
-//     let url = ctx.req.url.split('?')[0];
-//     let result = router.find(ctx.req.method, url);
-//     if (result[0]) {
-//       ctx.req.params = result[1];
-//       return result[0](ctx);
-//     }
-//   }
-// }
-
-
 const path = require('path');
 const configDir = path.resolve(__dirname, '../../config');
 const controllerDir = path.resolve(__dirname, '../../controllers');
@@ -42,49 +22,39 @@ module.exports = function router(options) {
 
     let matchRouter = matchUrl(url, r);
 
-    if(matchRouter){
-        let controller = matchRouter.split('.')[0];
-        let action = matchRouter.split('.')[1];
-        let queryString = matchRouter.split('.')[2];
+    if (matchRouter) {
+      let controller = matchRouter.split('.')[0];
+      let action = matchRouter.split('.')[1];
+      //let queryString = matchRouter.split('.')[2];
 
-        let obj = require(path.join(controllerDir, controller));
-        let cobj = new obj();
+      let obj = require(path.join(controllerDir, controller));
+      let cobj = new obj();
 
-        cobj[action](ctx);
-    }else{
-        ctx.res.send(502, 'Not found any controller.action')
+      cobj[action](ctx);
+    } else {
+      ctx.res.send(502, 'Not found any controller.action')
     }
-
-    // let result = router.find(ctx.req.method, url);
-    //
-    // if (result[0]) {
-    //   ctx.req.params = result[1];
-    //   let fn = result[0];
-    //   fn.applay(obj, arguments);
-    //   result[0](ctx);
-    // }
 
   }
 }
 
-function matchUrl(url, router){
+function matchUrl(url, router) {
 
-    // 请求的路径 === 路由规则，如： router['/upload/index'] = 'controller.index';
-    if(router[url]){
-        return router[url]
+  // 请求的路径 === 路由规则，如： router['/upload/index'] = 'controller.index';
+  if (router[url]) {
+    return router[url]
+  }
+
+  // 正则匹配， router['/upload/(:num)'] = 'controller.index.id=$1';
+  for (let k in router) {
+    let newKey = k.replace(/:any/g, '[^/]+').replace(/:num/g, '[0-9]+');
+    let regex = new RegExp("^" + newKey + "$", "gi");
+
+    let matchArr = url.match(regex);
+    if (matchArr) {
+      //匹配
+      var newstr = url.replace(regex, router[k]);
+      return newstr
     }
-
-    // 正则匹配， router['/upload/(:num)'] = 'controller.index.id=$1';
-    let obj = Object.assign({});
-    for(let k in router){
-        let newKey = k.replace(/:any/g, '[^/]+').replace(/:num/g, '[0-9]+');
-        let regex = new RegExp("^"+newKey+"$", "gi");
-
-        let matchArr = url.match(regex);
-        if(matchArr){
-            //匹配
-            var newstr = url.replace(regex, router[k]);
-            return newstr
-        }
-    }
+  }
 }

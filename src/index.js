@@ -1,4 +1,5 @@
 //const fs = require('fs');
+global.Promise = require('bluebird')
 const path = require('path');
 const Kone = require('./core/');
 const jsonp = require('./middleware/jsonp');
