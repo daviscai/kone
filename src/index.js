@@ -3,6 +3,7 @@ global.Promise = require('bluebird')
 const path = require('path');
 const Kone = require('./core/');
 const jsonp = require('./middleware/jsonp');
+const json = require('./middleware/json');
 const router = require('./middleware/router');
 const staticServer = require('./middleware/static');
 const bodyParser = require('./middleware/bodyparser');
@@ -63,7 +64,7 @@ app.use(helmet());
 app.use(redis());
 
 // mongodb
-app.use(mongo());
+// app.use(mongo());
 
 // db
 app.use(db());
@@ -77,6 +78,9 @@ app.use(uploadFile({
   maxFileSize: 2 * 1024 * 1024, // bytes = 2mb default
   keepExtensions: true // default false
 }));
+
+// 处理json返回值
+app.use(json()); 
 
 // server static file
 app.last(staticServer('assets', __dirname + '/../assets/'));

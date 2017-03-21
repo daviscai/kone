@@ -16,7 +16,7 @@ module.exports = function router(options) {
   let routerFile = options.routerFile || 'router.js';
   let r = require(path.join(routerConfigDir, routerFile));
 
-  return function(ctx) {
+  return async function(ctx, next) {
 
     let url = ctx.req.url.split('?')[0];
 
@@ -28,18 +28,21 @@ module.exports = function router(options) {
       //let queryString = matchRouter.split('.')[2];
 
       let obj = require(path.join(controllerDir, controller));
-      let cobj = new obj();
+      let cobj = new obj(ctx);
 
-      cobj[action](ctx);
-    } else {
-      ctx.res.send(502, 'Not found any controller.action')
+      await cobj[action](ctx);
+
+    }else if(url === '/favicon.ico' ){
+        return next();
+    }else{
+        ctx.res.send(500, 'Not found any controller.action')
     }
 
   }
 }
 
 function matchUrl(url, router) {
-
+  url = url.substring(url.length-1) === '/' && url !== '/' ? url.substring(0, url.length-1) : url;
   // 请求的路径 === 路由规则，如： router['/upload/index'] = 'controller.index';
   if (router[url]) {
     return router[url]
