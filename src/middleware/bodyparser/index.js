@@ -36,8 +36,6 @@ Object.defineProperties(bodyParser, {
 
   json: define(getter('json')),
 
-  multipart: define(getter('multipart')),
-
   raw: define(getter('raw')),
 
   text: define(getter('text')),
