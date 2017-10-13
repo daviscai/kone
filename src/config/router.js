@@ -2,7 +2,7 @@ let router = [];
 
 // module/controller.action.query
 
-router['/'] = 'home.index';
+router['/'] = 'home.testAll';
 router['/home/?'] = 'home.index';
 router['/home/testI18n'] = 'home.testI18n';
 router['/home/testRedis'] = 'home.testRedis';

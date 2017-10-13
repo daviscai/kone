@@ -6,52 +6,52 @@ const Cat = require('../models/cat');
 class Home {
 
   async testAll(ctx) {
-    ctx.session.user = "tom3";
-    let sess = ctx.session;
-    //console.log('session:'+sess);
+    // ctx.session.user = "tom3";
+    // let sess = ctx.session;
+    // //console.log('session:'+sess);
 
-    let a = ctx.i18n.__('app.title');
-    //console.log('title:'+a);
+    // let a = ctx.i18n.__('app.title');
+    // //console.log('title:'+a);
 
-    let csrf = ctx.store.get('csrf');
-    //console.log('csrf:'+csrf);
+    // let csrf = ctx.store.get('csrf');
+    // //console.log('csrf:'+csrf);
 
-    if (ctx.redis) {
-      await ctx.redis.set('foo', 'hello2');
-      let a = await ctx.redis.get('foo');
-      //console.log('redis:'+a);
-    }
+    // if (ctx.redis) {
+    //   await ctx.redis.set('foo', 'hello2');
+    //   let a = await ctx.redis.get('foo');
+    //   //console.log('redis:'+a);
+    // }
 
-    if (ctx.mongo) {
-      let catModel = Cat.make(ctx.mongo);
-      var kitty = new catModel({
-        name: 'Zildjian',
-        friends: ['tom', 'jerry']
-      });
-      kitty.age = 5;
+    // if (ctx.mongo) {
+    //   let catModel = Cat.make(ctx.mongo);
+    //   var kitty = new catModel({
+    //     name: 'Zildjian',
+    //     friends: ['tom', 'jerry']
+    //   });
+    //   kitty.age = 5;
 
-      kitty.save().then((doc) => {
-        //console.log(doc)
-      });
+    //   kitty.save().then((doc) => {
+    //     //console.log(doc)
+    //   });
 
-      let query = await catModel.findOne({
-        name: "Zildjian"
-      }).exec();
-      //console.log(query);
-    }
+    //   let query = await catModel.findOne({
+    //     name: "Zildjian"
+    //   }).exec();
+    //   //console.log(query);
+    // }
 
-    let userModel = User.make(ctx.db);
-    let rs = await userModel.findById('111');
+    // let userModel = User.make(ctx.db);
+    // let rs = await userModel.findById('111');
     //console.log('mysql:'+rs);
 
-    // await ctx.render("home/reg.tpl", {
-    //   title: 'aaa'
-    // });
+    await ctx.render("home/index.tpl", {                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
+      title: 'aaa'
+    });
 
     // ctx.log.info('abcddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd');
 
-    ctx.body = 'aaa';
-    ctx.status = 200;
+    //ctx.body = 'aaa';
+    //ctx.status = 200;
   }
 
 
